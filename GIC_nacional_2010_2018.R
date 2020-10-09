@@ -2879,9 +2879,9 @@ library(plotly)
 library(htmlwidgets)
 library(reshape2)
 
-setwd(c("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/Nacional/Nacional"))
+setwd(c("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/GIC Nacional 2010 - 2018/GIC_nacional_2010_2018"))
 
-Deciles_por_fuente_2010<-read.dbf("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/Nacional/Nacional/Nacional por fuente por DECIL estimaciones 2010.dbf")
+Deciles_por_fuente_2010<-read.dbf("Nacional por fuente por DECIL estimaciones 2010.dbf")
 
 names(Deciles_por_fuente_2010)=c("ING COR2010", "TRABAJO2010", "SUBORDINADO2010", "NEGOCIOS2010","OTROS TRAB2010", "RENTAS2010","UTILIDAD2010", "ARRENDA2010", "TRANSFER2010","JUBILACION2010", "BECAS2010", "DONATIVOS2010", "REMESAS2010", "BENEGOBIERNO2010", "TRANS HOG2010", "TRANS INST2010", "ESTIM ALQU2010", "OTROS INGRESOS2010")
 
@@ -2895,7 +2895,7 @@ Deciles_por_fuente_2010<-Deciles_por_fuente_2010%>%
 
 all.equal(Deciles_por_fuente_2010$`ING COR2010`,Deciles_por_fuente_2010$prueba)
 
-Deciles_por_fuente_2018<-read.dbf("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/Nacional/Nacional/Nacional Ingresos por fuente por DECIL estimaciones 2018.dbf")
+Deciles_por_fuente_2018<-read.dbf("Nacional Ingresos por fuente por DECIL estimaciones 2018.dbf")
 
 names(Deciles_por_fuente_2018)=c("ING COR2018", "TRABAJO2018", "SUBORDINADO2018", "NEGOCIOS2018","OTROS TRAB2018", "RENTAS2018","UTILIDAD2018", "ARRENDA2018", "TRANSFER2018","JUBILACION2018", "BECAS2018", "DONATIVOS2018", "REMESAS2018", "BENEGOBIERNO2018", "TRANS HOG2018", "TRANS INST2018", "ESTIM ALQU2018", "OTROS INGRESOS2018")
 
@@ -2907,7 +2907,7 @@ Deciles_por_fuente_2018<-Deciles_por_fuente_2018%>%
            Deciles_por_fuente_2018$`TRANS INST2018`+Deciles_por_fuente_2018$`ESTIM ALQU2018`+
            Deciles_por_fuente_2018$`OTROS INGRESOS2018`)
 
-all.equal(Deciles_por_fuente_2018$`ING COR2018`,Deciles_por_fuente_2018$prueba)
+all.equal(Deciles_por_fuente_2018$`ING COR2018`, Deciles_por_fuente_2018$prueba)
 
 
 Tasa_total<-((Deciles_por_fuente_2018$`ING COR2018`- Deciles_por_fuente_2010$`ING COR2010`)/Deciles_por_fuente_2010$`ING COR2010`)*100
@@ -3036,9 +3036,11 @@ cuadro_final<-data.frame(
   "Rent estimate"=alquiler$alquiler_aporte,
   "Others"=otros$otros_aporte)
 
-#cuadro_final<-cuadro_final%>%
-# mutate(Prueba=Labor+Capital+Pensions+Scholarships+Donations+Remittances+Government.transfers+Household.transfers+
-#         Instituion.transfers+Rent.estimate+Others)
+prueba<-cuadro_final%>%
+mutate(Prueba=Labor+Capital+Pensions+Scholarships+Donations+Remittances+Government.transfers+Household.transfers+
+         Instituion.transfers+Rent.estimate+Others)
+
+all.equal(Tasa_total,prueba$Prueba)
 
 
 
@@ -3063,13 +3065,19 @@ labels<-cuadro_final%>%
 
 labels<-labels$`sum(labels) + 1.5`
 
-maxymin<-cuadro_final%>%
+max<-cuadro_final%>%
   group_by(Deciles)%>%
-  summarize(max(sum(value)))
+  filter(value>0)%>%
+  summarize(sum(value))
 
-max<-round(max(maxymin$`max(sum(value))`)+2)
+max<-round(max(max$`sum(value)`)+2)
 
-min<-round(min(maxymin$`max(sum(value))`)-2)
+min<-cuadro_final%>%
+  group_by(Deciles)%>%
+  filter(value<0)%>%
+  summarize(sum(value))
+
+min<-round(min(min$`sum(value)`)-2)
 
 GIC<-cuadro_final%>%
   mutate(Deciles=fct_relevel(Deciles,"Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"))%>%
@@ -3099,11 +3107,9 @@ GIC<-ggplotly(GIC)
 
 GIC
 
-saveWidget(GIC,fil="GIC_Nacional_por_fuente.html")
+saveWidget(GIC,fil="GIC_Mexico_by_source_of_income.html")
 
 rm(list=ls())
-
-
 
 
 ########## GIC por raza ########
@@ -3114,18 +3120,18 @@ library(htmlwidgets)
 library(reshape2)
 library(ggrepel)
 
-setwd(c("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/Nacional/Nacional"))
+setwd(c("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/GIC Nacional 2010 - 2018/GIC_nacional_2010_2018"))
 
-deciles2010indigena<-read.dbf("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/Nacional/Nacional/Nacional INDIGENA por fuente por DECIL estimaciones 2010.dbf")
+deciles2010indigena<-read.dbf("Nacional INDIGENA por fuente por DECIL estimaciones 2010.dbf")
 names(deciles2010indigena)[1]<-c("Indigena2010")
 
-deciles2018indigena<-read.dbf("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/Nacional/Nacional/Nacional INDIGENA Ingresos por fuente por DECIL estimaciones 2018.dbf")
+deciles2018indigena<-read.dbf("Nacional INDIGENA Ingresos por fuente por DECIL estimaciones 2018.dbf")
 names(deciles2018indigena)[1]<-c("Indigena2018")
 
-deciles2010No<-read.dbf("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/Nacional/Nacional/Nacional NO por fuente por DECIL estimaciones 2010.dbf")
+deciles2010No<-read.dbf("Nacional NO por fuente por DECIL estimaciones 2010.dbf")
 names(deciles2010No)[1]<-c("No2010")
 
-deciles2018No<-read.dbf("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/Nacional/Nacional/Nacional NO Ingresos por fuente por DECIL estimaciones 2018.dbf")
+deciles2018No<-read.dbf("Nacional NO Ingresos por fuente por DECIL estimaciones 2018.dbf")
 names(deciles2018No)[1]<-c("No2018")
 
 GIC_por_raza<-data.frame(deciles2010indigena,deciles2018indigena,deciles2010No,deciles2018No)
@@ -3145,6 +3151,20 @@ GIC_por_raza_derretida<-GIC_reducida%>%
 GIC_por_raza_derretida$Rates<-as.factor(as.character(GIC_por_raza_derretida$Rates))
 
 
+max<-GIC_por_raza_derretida%>%
+  group_by(Deciles)%>%
+  filter(value>0)%>%
+  summarize(sum(value))
+
+max<-round(max(max$`sum(value)`)+2)
+
+min<-GIC_por_raza_derretida%>%
+  group_by(Deciles)%>%
+  filter(value<0)%>%
+  summarize(sum(value))
+
+min<-round(min(min$`sum(value)`)-2)
+
 GIC_por_raza<-GIC_por_raza_derretida%>%
   mutate(Deciles=fct_relevel(Deciles,"Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"))%>%
   ggplot(aes(x=Deciles,y=value,fill=Rates))+
@@ -3153,13 +3173,14 @@ GIC_por_raza<-GIC_por_raza_derretida%>%
        fill="Ethnic group:",
        y="Growth rate (total)",
        x="Decile")+
+  scale_y_continuous(breaks=seq(min,max,1))+
   theme_minimal()
 
 GIC_por_raza<-ggplotly(GIC_por_raza)
 
 GIC_por_raza
 
-saveWidget(GIC_por_raza,fil="GIC_Nacional_por_raza.html")
+saveWidget(GIC_por_raza,fil="GIC_Mexico_by_race.html")
 
 rm(list=ls())
 
@@ -3171,9 +3192,9 @@ library(htmlwidgets)
 library(reshape2)
 
 
-setwd(c("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/Nacional/Nacional"))
+setwd(c("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/GIC Nacional 2010 - 2018/GIC_nacional_2010_2018"))
 
-Deciles_por_fuente_2010_indigena<-read.dbf("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/Nacional/Nacional/Nacional INDIGENA por fuente por DECIL estimaciones 2010.dbf")
+Deciles_por_fuente_2010_indigena<-read.dbf("Nacional INDIGENA por fuente por DECIL estimaciones 2010.dbf")
 
 names(Deciles_por_fuente_2010_indigena)=c("ING.COR","TRABAJO","SUBORDINADO", "NEGOCIOS","OTROS.TRAB","RENTAS","UTILIDAD","ARRENDA",
                                           "TRANSFER","JUBILACION","BECAS","DONATIVOS","REMESAS","BENEGOBIER","TRANS.HOG","TRANS.INST","ESTIM.ALQU","OTROS.INGR")
@@ -3183,7 +3204,7 @@ Deciles_por_fuente_2010_indigena<-Deciles_por_fuente_2010_indigena%>%
 
 all.equal(Deciles_por_fuente_2010_indigena$ING.COR,Deciles_por_fuente_2010_indigena$prueba)
 
-Deciles_por_fuente_2018_indigena<-read.dbf("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/Nacional/Nacional/Nacional INDIGENA Ingresos por fuente por DECIL estimaciones 2018.dbf")
+Deciles_por_fuente_2018_indigena<-read.dbf("Nacional INDIGENA Ingresos por fuente por DECIL estimaciones 2018.dbf")
 
 names(Deciles_por_fuente_2018_indigena)=c("ING.COR","TRABAJO","SUBORDINADO", "NEGOCIOS","OTROS.TRAB","RENTAS","UTILIDAD","ARRENDA",
                                           "TRANSFER","JUBILACION","BECAS","DONATIVOS","REMESAS","BENEGOBIER","TRANS.HOG","TRANS.INST","ESTIM.ALQU","OTROS.INGR")
@@ -3350,7 +3371,7 @@ names(Cuadro_indigena)<-c("Labor","Capital","Pensions","Scholarships","Donations
 
 #No indigena                         
 
-Deciles_por_fuente_2010_NO<-read.dbf("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/Nacional/Nacional/Nacional NO por fuente por DECIL estimaciones 2010.dbf")
+Deciles_por_fuente_2010_NO<-read.dbf("Nacional NO por fuente por DECIL estimaciones 2010.dbf")
 names(Deciles_por_fuente_2010_NO)=c("ING.COR","TRABAJO","SUBORDINADO", "NEGOCIOS","OTROS.TRAB","RENTAS","UTILIDAD","ARRENDA",
                                     "TRANSFER","JUBILACION","BECAS","DONATIVOS","REMESAS","BENEGOBIER","TRANS.HOG","TRANS.INST","ESTIM.ALQU","OTROS.INGR")
 
@@ -3362,7 +3383,7 @@ all.equal(Deciles_por_fuente_2010_NO$ING.COR,Deciles_por_fuente_2010_NO$prueba)
 ###
 
 
-Deciles_por_fuente_2018_NO<-read.dbf("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/Nacional/Nacional/Nacional NO Ingresos por fuente por DECIL estimaciones 2018.dbf")
+Deciles_por_fuente_2018_NO<-read.dbf("Nacional NO Ingresos por fuente por DECIL estimaciones 2018.dbf")
 
 names(Deciles_por_fuente_2018_NO)=c("ING.COR","TRABAJO","SUBORDINADO", "NEGOCIOS","OTROS.TRAB","RENTAS","UTILIDAD","ARRENDA",
                                     "TRANSFER","JUBILACION","BECAS","DONATIVOS","REMESAS","BENEGOBIER","TRANS.HOG","TRANS.INST","ESTIM.ALQU","OTROS.INGR")
@@ -3573,12 +3594,19 @@ labels_NO<-Cuadro_final%>%
 
 labels_NO<-labels_NO$`sum(labels) + 1.5`
 
-maxymin<-Cuadro_final%>%
+max<-Cuadro_final%>%
   group_by(Deciles)%>%
+  filter(value>0)
   summarize(sum(value))
 
-max<-round(max(maxymin$`sum(value)`)+2)
-min<-round(min(maxymin$`sum(value)`)-2)
+max<-round(max(max$value)+2)
+
+min<-Cuadro_final%>%
+  group_by(Deciles)%>%
+  filter(value<0)%>%
+summarize(sum(value))
+
+min<-round(min(min$`sum(value)`)-2)
 
 
 
@@ -3591,7 +3619,7 @@ GIC<-ggplot()+
            width = 0.25)+
   geom_col(data = NO_melt, mapping=aes(x=as.numeric(Deciles)+0.15, y=value, fill= as.factor(variable), group=`Ethnic group`),
            width = 0.25)+
-  labs(title = "Nacional, Growth Incidence Curve by ethnic group, 2010-2018",
+  labs(title = "Mexico, Growth Incidence Curve by ethnic group and source of income, 2010-2018",
        y="Growth rate (total)",
        x="Decile",
        fill="Source of income")+
@@ -3649,7 +3677,7 @@ GIC<-ggplotly(GIC)
 
 GIC
 
-saveWidget(GIC,fil="GIC_Nacional_por_raza_por_fuente.html")
+saveWidget(GIC,fil="GIC_Mexico_by_ethnic_group_and_source_of_income.html")
 
 rm(list=ls())
 
