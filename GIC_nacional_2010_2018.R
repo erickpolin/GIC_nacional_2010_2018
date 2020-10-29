@@ -3697,7 +3697,15 @@ library(survey)
 setwd("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/ENIGH 2010/ENIGH2010")
 Conc2010<-read.dbf("Conc2010.dbf",as.is = T)
 
+Conc2010<-Conc2010%>%
+  mutate(ind_rural=ifelse(HogarIndig==1&tam_loc,1,0))
+
 design_2010<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2010)
+
+
+
+
+#aquí hacer los totales
 
 Ethinc_group_by_decile_2010<-svyby(Conc2010$HogarIndig,by=Conc2010$DECIL,design = design_2010,svymean)
 
@@ -3728,6 +3736,16 @@ Prop_2010<-ggplot()+
   annotate("text", label= "Mean = 0.26", x= 8, y= media_2010+0.02,colour = "black")+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank())
+Prop_2010
+
+
+
+
+
+
+
+
+
 
 
 ###2018
