@@ -3691,21 +3691,78 @@ library(plotly)
 library(htmlwidgets)
 library(reshape2)
 library(survey)
+options(survey.lonely.psu="adjust")
 
-###2010
+###2010 total país 
+
+setwd("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/ENIGH 2010/ENIGH2010")
+Conc2010<-read.dbf("Conc2010.dbf",as.is = T)
+
+
+design_2010<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2010)
+
+
+Ethinc_group_by_decile_2010<-svyby(Conc2010$HogarIndig,by=Conc2010$DECIL,design = design_2010,svymean)
+
+Max_por_decil_2010<-Conc2010%>%
+  group_by(DECIL)%>%
+  summarize(min(ing_cor),max(ing_cor))
+
+Ethinc_group_by_decile_2010<-as.data.frame(Ethinc_group_by_decile_2010)
+
+Ethinc_group_by_decile_2010<-Ethinc_group_by_decile_2010 %>%
+  mutate(Deciles=c("I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+Ethinc_group_by_decile_2010<-Ethinc_group_by_decile_2010%>%
+  mutate(Deciles=fct_relevel(Deciles,"I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+media_2010<-round(svymean(Conc2010$HogarIndig,design_2010)[1],2)
+
+#Gráfico
+
+Prop_2010<-ggplot()+
+  geom_col(data = Ethinc_group_by_decile_2010, aes(x=Deciles, y=V1))+
+    geom_hline(yintercept = media_2010)+
+  labs(title = "  Mexico
+  Proportion of indigenous households by decile of income
+  in 2010",
+       y="Proportion of indigenous households",
+       x="Deciles")+
+  annotate("text", label= "Mean = 0.26", x= 9, y= media_2010+0.02,colour = "black")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank())+
+  scale_y_continuous(breaks=seq(0,0.6,0.1))+
+  geom_text(data = Ethinc_group_by_decile_2010, aes(x=Deciles,y=V1+0.02,label=round(V1,2)))
+
+Prop_2010
+
+
+
+rm(list=ls())
+
+
+
+
+
+
+
+
+
+
+
+
+
+###### Ahora urbanos
 
 setwd("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/ENIGH 2010/ENIGH2010")
 Conc2010<-read.dbf("Conc2010.dbf",as.is = T)
 
 Conc2010<-Conc2010%>%
-  mutate(ind_rural=ifelse(HogarIndig==1&tam_loc,1,0))
+  filter(Small==0)
+
 
 design_2010<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2010)
 
-
-
-
-#aquí hacer los totales
 
 Ethinc_group_by_decile_2010<-svyby(Conc2010$HogarIndig,by=Conc2010$DECIL,design = design_2010,svymean)
 
@@ -3730,13 +3787,77 @@ Prop_2010<-ggplot()+
   geom_hline(yintercept = media_2010)+
   labs(title = "  Mexico
   Proportion of indigenous households by decile of income
-  2010",
+  within settlements with a population above 15,000 residents in 2010",
        y="Proportion of indigenous households",
        x="Deciles")+
-  annotate("text", label= "Mean = 0.26", x= 8, y= media_2010+0.02,colour = "black")+
+  annotate("text", label= "Mean = 0.19", x= 9, y= media_2010+0.02,colour = "black")+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank())
+        panel.background = element_blank())+
+  scale_y_continuous(breaks=seq(0,0.6,0.1))+
+  geom_text(data = Ethinc_group_by_decile_2010, aes(x=Deciles,y=V1+0.02,label=round(V1,2)))
+
 Prop_2010
+
+rm(list=ls())
+
+
+
+
+
+
+
+
+
+
+
+###### Ahora rurales
+
+setwd("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/ENIGH 2010/ENIGH2010")
+Conc2010<-read.dbf("Conc2010.dbf",as.is = T)
+
+Conc2010<-Conc2010%>%
+  filter(Small==1)
+
+
+design_2010<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2010)
+
+
+Ethinc_group_by_decile_2010<-svyby(Conc2010$HogarIndig,by=Conc2010$DECIL,design = design_2010,svymean)
+
+Max_por_decil_2010<-Conc2010%>%
+  group_by(DECIL)%>%
+  summarize(min(ing_cor),max(ing_cor))
+
+Ethinc_group_by_decile_2010<-as.data.frame(Ethinc_group_by_decile_2010)
+
+Ethinc_group_by_decile_2010<-Ethinc_group_by_decile_2010 %>%
+  mutate(Deciles=c("I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+Ethinc_group_by_decile_2010<-Ethinc_group_by_decile_2010%>%
+  mutate(Deciles=fct_relevel(Deciles,"I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+media_2010<-round(svymean(Conc2010$HogarIndig,design_2010)[1],2)
+
+#Gráfico
+
+Prop_2010<-ggplot()+
+  geom_col(data = Ethinc_group_by_decile_2010, aes(x=Deciles, y=V1))+
+  geom_hline(yintercept = media_2010)+
+  labs(title = "  Mexico
+  Proportion of indigenous households by decile of income
+  within settlements with a population below 15,000 residents in 2010",
+       y="Proportion of indigenous households",
+       x="Deciles")+
+  annotate("text", label= "Mean = 0.37", x= 9, y= media_2010+0.02,colour = "black")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank())+
+  scale_y_continuous(breaks=seq(0,0.6,0.1))+
+  geom_text(data = Ethinc_group_by_decile_2010, aes(x=Deciles,y=V1+0.02,label=round(V1,2)))
+
+Prop_2010
+
+rm(list=ls())
+
 
 
 
@@ -3749,6 +3870,7 @@ Prop_2010
 
 
 ###2018
+
 
 setwd("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/ENIGH 2018/ENIGH2018")
 Conc2018<-read.dbf("Conc2018.dbf",as.is = T)
@@ -3785,6 +3907,110 @@ Prop_2018<-ggplot()+
        x="Deciles")+
   annotate("text", label= "Mean = 0.34", x= 8, y= media_2018+0.02,colour = "black")+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank())
+        panel.background = element_blank())+
+  scale_y_continuous(breaks=seq(0,0.6,0.1))+
+  geom_text(data = Ethnic_group_by_decile_2018, aes(x=Deciles,y=V1+0.02,label=round(V1,2)))
 
 Prop_2018
+
+rm(list=ls())
+
+  #### Urbanos
+
+setwd("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/ENIGH 2018/ENIGH2018")
+Conc2018<-read.dbf("Conc2018.dbf",as.is = T)
+
+Conc2018<-Conc2018%>%
+  filter(Small==0)
+
+design_2018 <-  svydesign(id=~as.factor(upm),strata=~est_dis,data=Conc2018,weights=~factor)
+
+Ethnic_group_by_decile_2018<-svyby(Conc2018$HogarIndig,by=Conc2018$DECIL,design = design_2018,svymean)
+
+Ethnic_group_by_decile_2018
+
+Max_por_decil_2018<-Conc2018%>%
+  group_by(DECIL)%>%
+  summarize(min(ing_cor),max(ing_cor))
+
+Ethnic_group_by_decile_2018<-as.data.frame(Ethnic_group_by_decile_2018)
+
+Ethnic_group_by_decile_2018<-Ethnic_group_by_decile_2018 %>%
+  mutate(Deciles=c("I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+Ethnic_group_by_decile_2018<-Ethnic_group_by_decile_2018%>%
+  mutate(Deciles=fct_relevel(Deciles,"I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+media_2018<-round(svymean(Conc2018$HogarIndig,design_2018)[1],2)
+
+#Gráfico
+
+Prop_2018<-ggplot()+
+  geom_col(data = Ethnic_group_by_decile_2018, aes(x=Deciles, y=V1))+
+  geom_hline(yintercept = media_2018)+
+  labs(title = "   Mexico
+  Proportion of indigenous households by decile of income
+  within settlements with a population above 15,000 residents in 2018",
+       y="Proportion of indigenous households",
+       x="Deciles")+
+  annotate("text", label= "Mean = 0.26", x= 8, y= media_2018+0.02,colour = "black")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank())+
+  scale_y_continuous(breaks=seq(0,0.6,0.1))+
+  geom_text(data = Ethnic_group_by_decile_2018, aes(x=Deciles,y=V1+0.02,label=round(V1,2)))
+
+
+Prop_2018
+
+rm(list=ls())
+
+
+#Rurales
+
+
+setwd("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/ENIGH 2018/ENIGH2018")
+Conc2018<-read.dbf("Conc2018.dbf",as.is = T)
+
+Conc2018<-Conc2018%>%
+  filter(Small==1)
+
+design_2018 <-  svydesign(id=~as.factor(upm),strata=~est_dis,data=Conc2018,weights=~factor)
+
+Ethnic_group_by_decile_2018<-svyby(Conc2018$HogarIndig,by=Conc2018$DECIL,design = design_2018,svymean)
+
+Ethnic_group_by_decile_2018
+
+Max_por_decil_2018<-Conc2018%>%
+  group_by(DECIL)%>%
+  summarize(min(ing_cor),max(ing_cor))
+
+Ethnic_group_by_decile_2018<-as.data.frame(Ethnic_group_by_decile_2018)
+
+Ethnic_group_by_decile_2018<-Ethnic_group_by_decile_2018 %>%
+  mutate(Deciles=c("I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+Ethnic_group_by_decile_2018<-Ethnic_group_by_decile_2018%>%
+  mutate(Deciles=fct_relevel(Deciles,"I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+media_2018<-round(svymean(Conc2018$HogarIndig,design_2018)[1],2)
+
+#Gráfico
+
+Prop_2018<-ggplot()+
+  geom_col(data = Ethnic_group_by_decile_2018, aes(x=Deciles, y=V1))+
+  geom_hline(yintercept = media_2018)+
+  labs(title = "   Mexico
+  Proportion of indigenous households by decile of income
+  within settlements with a population below 15,000 residents in 2018",
+       y="Proportion of indigenous households",
+       x="Deciles")+
+  annotate("text", label= "Mean = 0.46", x= 8, y= media_2018+0.02,colour = "black")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank())+
+  scale_y_continuous(breaks=seq(0,0.6,0.1))+
+  geom_text(data = Ethnic_group_by_decile_2018, aes(x=Deciles,y=V1+0.02,label=round(V1,2)))
+
+
+Prop_2018
+
+rm(list=ls())
