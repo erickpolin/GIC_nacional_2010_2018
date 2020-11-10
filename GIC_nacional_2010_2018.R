@@ -4189,10 +4189,33 @@ Conc2010<-read.dbf("Conc2010.dbf",as.is = T)
 Conc2010<-Conc2010 %>%
   filter(Small==0)
 
-names(Conc2010)<-c("ENTIDAD","FOLIOVIV","FOLIOHOG","TOT_INTEG","INGCOR","INGTRAB","TRABAJO","NEGOCIO","OTROS_TRAB",
-                   "RENTAS","UTILIDAD","ARRENDA","TRANSFER","JUBILA","BECA","DONATIVO","REMESA","BENE_GOB",
-                   "ESP_HOG","ESP_INST","ESTI","OTROS","FACTOR","UPM","EST_DIS","HOGARINDIG","NOMBRE_ENT",
-                   "DEFLACTORES","Nhog","TAM_DECIL","MAXT","ACUMULA","ACUMULA2","DECIL")
+names(Conc2010)<-c("ENTIDAD","FOLIOVIV", "FOLIOHOG","TOT_INTEG","ING_COR","INGTRAB","TRABAJO","NEGOCIO",
+                   "OTROS_TRAB","RENTAS","UTILIDAD",  
+                    "arrenda"  
+                    "transfer" 
+                    "jubilacion"
+                    "becas"   
+                    "donativos" 
+                    "remesas"  
+                    "bene_gob" 
+                    "transf_hog" 
+                    "trans_inst"
+                    "estim_alqu"
+                    "otros_ing" 
+                    "factor"  
+                    "upm"       
+                    "est_dis" 
+                    "tam_loc" 
+                    "Small"   
+                    "HogarIndig"
+                    "entidades" 
+                    "Deflactore" 
+                    "Nhog"    
+                    "tam_dec"   
+                    "MAXT"   
+                    "ACUMULA"  
+                    "ACUMULA2" 
+                    "DECIL" )
 
 mydesign <- svydesign(id=~UPM,strata=~EST_DIS,data=Conc2010,weights=~FACTOR)
 
