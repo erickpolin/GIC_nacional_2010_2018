@@ -4189,33 +4189,11 @@ Conc2010<-read.dbf("Conc2010.dbf",as.is = T)
 Conc2010<-Conc2010 %>%
   filter(Small==0)
 
-names(Conc2010)<-c("ENTIDAD","FOLIOVIV", "FOLIOHOG","TOT_INTEG","ING_COR","INGTRAB","TRABAJO","NEGOCIO",
-                   "OTROS_TRAB","RENTAS","UTILIDAD",  
-                    "arrenda"  
-                    "transfer" 
-                    "jubilacion"
-                    "becas"   
-                    "donativos" 
-                    "remesas"  
-                    "bene_gob" 
-                    "transf_hog" 
-                    "trans_inst"
-                    "estim_alqu"
-                    "otros_ing" 
-                    "factor"  
-                    "upm"       
-                    "est_dis" 
-                    "tam_loc" 
-                    "Small"   
-                    "HogarIndig"
-                    "entidades" 
-                    "Deflactore" 
-                    "Nhog"    
-                    "tam_dec"   
-                    "MAXT"   
-                    "ACUMULA"  
-                    "ACUMULA2" 
-                    "DECIL" )
+names(Conc2010)<-c("ENTIDAD","FOLIOVIV", "FOLIOHOG","TOT_INTEG","INGCOR","INGTRAB","TRABAJO","NEGOCIO",
+                   "OTROS_TRAB","RENTAS","UTILIDAD","ARRENDA","TRANSFER","JUBILA","BECA","DONATIVO",
+                   "REMESA","BENE_GOB","ESP_HOG","ESP_INST","ESTI","OTROS","FACTOR","UPM",
+                   "EST_DIS","TAM_LOC","Small","HogarIndig","entidades","Deflactore","Nhog","tam_dec",
+                   "MAXT","ACUMULA","ACUMULA2","DECIL" )
 
 mydesign <- svydesign(id=~UPM,strata=~EST_DIS,data=Conc2010,weights=~FACTOR)
 
@@ -4686,10 +4664,11 @@ Conc2010<-read.dbf("Conc2010.dbf",as.is = T)
 Conc2010<-Conc2010 %>%
   filter(Small==1)
 
-names(Conc2010)<-c("ENTIDAD","FOLIOVIV","FOLIOHOG","TOT_INTEG","INGCOR","INGTRAB","TRABAJO","NEGOCIO","OTROS_TRAB",
-                   "RENTAS","UTILIDAD","ARRENDA","TRANSFER","JUBILA","BECA","DONATIVO","REMESA","BENE_GOB",
-                   "ESP_HOG","ESP_INST","ESTI","OTROS","FACTOR","UPM","EST_DIS","HOGARINDIG","NOMBRE_ENT",
-                   "DEFLACTORES","Nhog","TAM_DECIL","MAXT","ACUMULA","ACUMULA2","DECIL")
+names(Conc2010)<-c("ENTIDAD","FOLIOVIV", "FOLIOHOG","TOT_INTEG","INGCOR","INGTRAB","TRABAJO","NEGOCIO",
+                   "OTROS_TRAB","RENTAS","UTILIDAD","ARRENDA","TRANSFER","JUBILA","BECA","DONATIVO",
+                   "REMESA","BENE_GOB","ESP_HOG","ESP_INST","ESTI","OTROS","FACTOR","UPM",
+                   "EST_DIS","TAM_LOC","Small","HogarIndig","entidades","Deflactore","Nhog","tam_dec",
+                   "MAXT","ACUMULA","ACUMULA2","DECIL" )
 
 mydesign <- svydesign(id=~UPM,strata=~EST_DIS,data=Conc2010,weights=~FACTOR)
 
@@ -5002,7 +4981,7 @@ LI_Mtrans_instDECIL <- confint(Mtrans_instDECIL,level=0.90)[,1]
 
 LI_Mestim_alquTot <- confint(Mestim_alquTot,level=0.90)[,1]
 LI_Mestim_alquDECIL <- confint(Mestim_alquDECIL,level=0.90)[,1
-                                                            ]
+]
 LI_Motros_ingTot <- confint(Motros_ingTot,level=0.90)[,1]
 LI_Motros_ingDECIL <- confint(Motros_ingDECIL ,level=0.90)[,1]
 
@@ -5140,6 +5119,8 @@ write.dbf(c_DECIL_SE,file = "Nacional RURAL por fuente por DECIL errores standar
 write.dbf(c_DECIL_CV,file = "Nacional RURAL por fuente por DECIL CV 2010.dbf")
 write.dbf(c_DECIL_LI,file = "Nacional RURAL por fuente por DECIL LI 2010.dbf")
 write.dbf(c_DECIL_ES,file = "Nacional RURAL por fuente por DECIL LS 2010.dbf")
+
+rm(list=ls())
 
 ########## Ingresos por fuente por Decil URBANO 2018 #########
 library(foreign)
