@@ -6055,3 +6055,78 @@ write.dbf(c_DECIL_LI,file = "Nacional RURAL Ingresos por fuente por DECIL LI 201
 write.dbf(c_DECIL_ES,file = "Nacional RURAL Ingresos por fuente por DECIL LS 2018.dbf")
 
 rm(list=ls())
+
+########## GIC urbana y rural #######
+library(foreign)
+library(tidyverse)
+library(plotly)
+library(htmlwidgets)
+library(reshape2)
+library(ggrepel)
+
+setwd(c("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/GIC Nacional 2010 - 2018/GIC_nacional_2010_2018"))
+
+deciles2010urbano<-read.dbf("Nacional URBANO por fuente por DECIL estimaciones 2010.dbf")
+names(deciles2010urbano)[1]<-c("URBANO_2010")
+
+deciles2018urbano<-read.dbf("Nacional URBANO Ingresos por fuente por DECIL estimaciones 2018.dbf")
+names(deciles2018urbano)[1]<-c("URBANO_2018")
+
+deciles2010rural<-read.dbf("Nacional RURAL por fuente por DECIL estimaciones 2010.dbf")
+names(deciles2010rural)[1]<-c("RURAL_2010")
+
+deciles2018rural<-read.dbf("Nacional RURAL Ingresos por fuente por DECIL estimaciones 2018.dbf")
+names(deciles2018rural)[1]<-c("RURAL_2018")
+
+GIC_por_tama<-data.frame(deciles2010rural,deciles2010urbano,deciles2018rural,deciles2018urbano)
+
+
+GIC_por_tama<-GIC_por_tama%>%
+  mutate("Urban"=((URBANO_2018-URBANO_2010)/URBANO_2010)*100,
+         "Rural"=((RURAL_2018-RURAL_2010)/RURAL_2010)*100,
+         "Deciles"=c("Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+GIC_reducida<-GIC_por_tama%>%
+  select(Urban,Rural,Deciles)
+
+GIC_por_tama_derretida<-GIC_reducida%>%
+  melt(id.vars="Deciles",variable.name="Rates")
+
+GIC_por_tama_derretida$Rates<-as.factor(as.character(GIC_por_tama_derretida$Rates))
+
+
+max<-GIC_por_tama_derretida%>%
+  group_by(Deciles)%>%
+  filter(value>0)%>%
+  summarize(sum(value))
+
+max<-round(max(max$`sum(value)`)+2)
+
+min<-GIC_por_tama_derretida%>%
+  group_by(Deciles)%>%
+  filter(value<0)%>%
+  summarize(sum(value))
+
+min<-round(min(min$`sum(value)`)-2)
+
+GIC_por_tamanio<-GIC_por_tama_derretida%>%
+  mutate(Deciles=fct_relevel(Deciles,"Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"))%>%
+  ggplot(aes(x=Deciles,y=value,fill=Rates))+
+  geom_col(position=position_dodge())+
+  labs(title = "Growth Incidence Curve Nacional by size of the settelment 2010-2018",
+       fill="",
+       y="Growth rate (total)",
+       x="Decile")+
+  scale_y_continuous(breaks=seq(min,max,1))+
+  theme_minimal()
+
+GIC_por_tamanio
+
+GIC_por_tamanio<-ggplotly(GIC_por_tamanio)
+
+GIC_por_tamanio
+
+saveWidget(GIC_por_tamanio,fil="GIC_Mexico_by_size.html")
+
+rm(list=ls())
+
