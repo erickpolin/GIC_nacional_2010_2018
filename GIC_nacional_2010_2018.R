@@ -6130,3 +6130,500 @@ saveWidget(GIC_por_tamanio,fil="GIC_Mexico_by_size.html")
 
 rm(list=ls())
 
+
+########## GIC urbana y rural por fuente #########
+library(foreign)
+library(tidyverse)
+library(plotly)
+library(htmlwidgets)
+library(reshape2)
+
+
+setwd(c("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/GIC Nacional 2010 - 2018/GIC_nacional_2010_2018"))
+
+Deciles_por_fuente_2010_urbano<-read.dbf("Nacional URBANO por fuente por DECIL estimaciones 2010.dbf")
+
+names(Deciles_por_fuente_2010_urbano)=c("ING.COR","TRABAJO","SUBORDINADO", "NEGOCIOS","OTROS.TRAB","RENTAS","UTILIDAD","ARRENDA",
+                                          "TRANSFER","JUBILACION","BECAS","DONATIVOS","REMESAS","BENEGOBIER","TRANS.HOG","TRANS.INST","ESTIM.ALQU","OTROS.INGR")
+
+Deciles_por_fuente_2010_urbano<-Deciles_por_fuente_2010_urbano%>%
+  mutate(prueba=TRABAJO+RENTAS+JUBILACION+BECAS+DONATIVOS+REMESAS+BENEGOBIER+TRANS.HOG+TRANS.INST+ESTIM.ALQU+OTROS.INGR)
+
+all.equal(Deciles_por_fuente_2010_urbano$ING.COR,Deciles_por_fuente_2010_urbano$prueba)
+
+Deciles_por_fuente_2018_urbano<-read.dbf("Nacional URBANO Ingresos por fuente por DECIL estimaciones 2018.dbf")
+
+names(Deciles_por_fuente_2018_urbano)=c("ING.COR","TRABAJO","SUBORDINADO", "NEGOCIOS","OTROS.TRAB","RENTAS","UTILIDAD","ARRENDA",
+                                          "TRANSFER","JUBILACION","BECAS","DONATIVOS","REMESAS","BENEGOBIER","TRANS.HOG","TRANS.INST","ESTIM.ALQU","OTROS.INGR")
+
+Deciles_por_fuente_2018_urbano<-Deciles_por_fuente_2018_urbano%>%
+  mutate(prueba=TRABAJO+RENTAS+JUBILACION+BECAS+DONATIVOS+REMESAS+BENEGOBIER+TRANS.HOG+TRANS.INST+ESTIM.ALQU+OTROS.INGR)
+
+all.equal(Deciles_por_fuente_2018_urbano$ING.COR,Deciles_por_fuente_2018_urbano$prueba)
+
+################################## urbano 
+Tasa_total_urbano<-((Deciles_por_fuente_2018_urbano$ING.COR-Deciles_por_fuente_2010_urbano$ING.COR)/
+                        Deciles_por_fuente_2010_urbano$ING.COR)*100
+
+#### trabajo
+
+Trabajo_urbano<-data.frame(trabajo2010=Deciles_por_fuente_2010_urbano$TRABAJO,
+                             trabajo2018=Deciles_por_fuente_2018_urbano$TRABAJO,
+                             ing_cor2010=Deciles_por_fuente_2010_urbano$ING.COR,
+                             ing_cor2018=Deciles_por_fuente_2018_urbano$ING.COR,
+                             Tasa_total_urbano)
+
+Trabajo_urbano<-Trabajo_urbano%>%
+  mutate(trabajo_aporte=((trabajo2018-trabajo2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_urbano)
+
+#### renta
+
+Renta_urbano<-data.frame(renta2010=Deciles_por_fuente_2010_urbano$RENTAS,
+                           renta2018=Deciles_por_fuente_2018_urbano$RENTAS,
+                           ing_cor2010=Deciles_por_fuente_2010_urbano$ING.COR,
+                           ing_cor2018=Deciles_por_fuente_2018_urbano$ING.COR,
+                           Tasa_total_urbano)
+
+Renta_urbano<-Renta_urbano%>%
+  mutate(rentas_aporte=((renta2018-renta2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_urbano)
+
+#### Jubilaciones
+
+Jubilaciones_urbano<-data.frame(jubilaciones2010=Deciles_por_fuente_2010_urbano$JUBILACION,
+                                  jubilaciones2018=Deciles_por_fuente_2018_urbano$JUBILACION,
+                                  ing_cor2010=Deciles_por_fuente_2010_urbano$ING.COR,
+                                  ing_cor2018=Deciles_por_fuente_2018_urbano$ING.COR,
+                                  Tasa_total_urbano)
+
+Jubilaciones_urbano<-Jubilaciones_urbano%>%
+  mutate(jubilaciones_aporte=((jubilaciones2018-jubilaciones2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_urbano)
+
+## Becas
+
+Becas_urbano<-data.frame(becas2010=Deciles_por_fuente_2010_urbano$BECAS,
+                           becas2018=Deciles_por_fuente_2018_urbano$BECAS,
+                           ing_cor2010=Deciles_por_fuente_2010_urbano$ING.COR,
+                           ing_cor2018=Deciles_por_fuente_2018_urbano$ING.COR,
+                           Tasa_total_urbano)
+
+Becas_urbano<-Becas_urbano%>%
+  mutate(becas_aporte=((becas2018-becas2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_urbano)
+
+## Donativos
+
+Donativos_urbano<-data.frame(donativos2010=Deciles_por_fuente_2010_urbano$DONATIVOS,
+                               donativos2018=Deciles_por_fuente_2018_urbano$DONATIVOS,
+                               ing_cor2010=Deciles_por_fuente_2010_urbano$ING.COR,
+                               ing_cor2018=Deciles_por_fuente_2018_urbano$ING.COR,
+                               Tasa_total_urbano)
+
+Donativos_urbano<-Donativos_urbano%>%
+  mutate(donativos_aporte=((donativos2018-donativos2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_urbano)
+
+### Remesas
+
+Remesas_urbano<-data.frame(remesas2010=Deciles_por_fuente_2010_urbano$REMESAS,
+                             remesas2018=Deciles_por_fuente_2018_urbano$REMESAS,
+                             ing_cor2010=Deciles_por_fuente_2010_urbano$ING.COR,
+                             ing_cor2018=Deciles_por_fuente_2018_urbano$ING.COR,
+                             Tasa_total_urbano)
+
+Remesas_urbano<-Remesas_urbano%>%
+  mutate(remesas_aporte=((remesas2018-remesas2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_urbano)
+
+### Bene Gob
+
+Benegob_urbano<-data.frame(benegob2010=Deciles_por_fuente_2010_urbano$BENEGOBIER,
+                             benegob2018=Deciles_por_fuente_2018_urbano$BENEGOBIER,
+                             ing_cor2010=Deciles_por_fuente_2010_urbano$ING.COR,
+                             ing_cor2018=Deciles_por_fuente_2018_urbano$ING.COR,
+                             Tasa_total_urbano)
+
+Benegob_urbano<-Benegob_urbano%>%
+  mutate(benegob_aporte=((benegob2018-benegob2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_urbano)
+
+### Trans de hogares
+
+Trans_hogares_urbano<-data.frame(transdehogares2010=Deciles_por_fuente_2010_urbano$TRANS.HOG,
+                                   transdehogares2018=Deciles_por_fuente_2018_urbano$TRANS.HOG,
+                                   ing_cor2010=Deciles_por_fuente_2010_urbano$ING.COR,
+                                   ing_cor2018=Deciles_por_fuente_2018_urbano$ING.COR,
+                                   Tasa_total_urbano)
+
+Trans_hogares_urbano<-Trans_hogares_urbano%>%
+  mutate(transdehogares_aporte=((transdehogares2018-transdehogares2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_urbano)
+
+### Trans de Instituciones
+
+Instituciones_urbano<-data.frame(instituciones2010=Deciles_por_fuente_2010_urbano$TRANS.INST,
+                                   instituciones2018=Deciles_por_fuente_2018_urbano$TRANS.INST,
+                                   ing_cor2010=Deciles_por_fuente_2010_urbano$ING.COR,
+                                   ing_cor2018=Deciles_por_fuente_2018_urbano$ING.COR,
+                                   Tasa_total_urbano)
+
+Instituciones_urbano<-Instituciones_urbano%>%
+  mutate(instituciones_aporte=((instituciones2018-instituciones2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_urbano)
+
+### Alquiler
+
+Alquiler_urbano<-data.frame(alquiler2010=Deciles_por_fuente_2010_urbano$ESTIM.ALQU,
+                              alquiler2018=Deciles_por_fuente_2018_urbano$ESTIM.ALQU,
+                              ing_cor2010=Deciles_por_fuente_2010_urbano$ING.COR,
+                              ing_cor2018=Deciles_por_fuente_2018_urbano$ING.COR,
+                              Tasa_total_urbano)
+
+Alquiler_urbano<-Alquiler_urbano%>%
+  mutate(alquiler_aporte=((alquiler2018-alquiler2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_urbano)
+
+### otros
+
+Otros_urbano<-data.frame(otros2010=Deciles_por_fuente_2010_urbano$OTROS.INGR,
+                           otros2018=Deciles_por_fuente_2018_urbano$OTROS.INGR,
+                           ing_cor2010=Deciles_por_fuente_2010_urbano$ING.COR,
+                           ing_cor2018=Deciles_por_fuente_2018_urbano$ING.COR,
+                           Tasa_total_urbano)
+
+Otros_urbano<-Otros_urbano%>%
+  mutate(otros_aporte=((otros2018-otros2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_urbano)
+
+Cuadro_urbano<-data.frame(Trabajo_urbano$trabajo_aporte,
+                            Renta_urbano$rentas_aporte,
+                            Jubilaciones_urbano$jubilaciones_aporte,
+                            Becas_urbano$becas_aporte,
+                            Donativos_urbano$donativos_aporte,
+                            Remesas_urbano$remesas_aporte,
+                            Benegob_urbano$benegob_aporte,
+                            Trans_hogares_urbano$transdehogares_aporte,
+                            Instituciones_urbano$instituciones_aporte,
+                            Alquiler_urbano$alquiler_aporte,
+                            Otros_urbano$otros_aporte)
+
+Prueba<-(Trabajo_urbano$trabajo_aporte+
+           Renta_urbano$rentas_aporte+
+           Jubilaciones_urbano$jubilaciones_aporte+
+           Becas_urbano$becas_aporte+
+           Donativos_urbano$donativos_aporte+
+           Remesas_urbano$remesas_aporte+
+           Benegob_urbano$benegob_aporte+
+           Trans_hogares_urbano$transdehogares_aporte+
+           Instituciones_urbano$instituciones_aporte+
+           Alquiler_urbano$alquiler_aporte+
+           Otros_urbano$otros_aporte)
+
+all.equal(Prueba,Tasa_total_urbano)
+
+
+names(Cuadro_urbano)<-c("Labor","Capital","Pensions","Scholarships","Donations","Remittances","Government transfers",
+                          "Household transfers","Instituion transfers","Rent estimate","Others")                             
+
+#No urbano                         
+
+Deciles_por_fuente_2010_NO<-read.dbf("Nacional RURAL por fuente por DECIL estimaciones 2010.dbf")
+names(Deciles_por_fuente_2010_NO)=c("ING.COR","TRABAJO","SUBORDINADO", "NEGOCIOS","OTROS.TRAB","RENTAS","UTILIDAD","ARRENDA",
+                                    "TRANSFER","JUBILACION","BECAS","DONATIVOS","REMESAS","BENEGOBIER","TRANS.HOG","TRANS.INST","ESTIM.ALQU","OTROS.INGR")
+
+Deciles_por_fuente_2010_NO<-Deciles_por_fuente_2010_NO%>%
+  mutate(prueba=TRABAJO+RENTAS+JUBILACION+BECAS+DONATIVOS+REMESAS+BENEGOBIER+TRANS.HOG+TRANS.INST+ESTIM.ALQU+OTROS.INGR)
+
+all.equal(Deciles_por_fuente_2010_NO$ING.COR,Deciles_por_fuente_2010_NO$prueba)
+
+###
+
+
+Deciles_por_fuente_2018_NO<-read.dbf("Nacional RURAL Ingresos por fuente por DECIL estimaciones 2018.dbf")
+
+names(Deciles_por_fuente_2018_NO)=c("ING.COR","TRABAJO","SUBORDINADO", "NEGOCIOS","OTROS.TRAB","RENTAS","UTILIDAD","ARRENDA",
+                                    "TRANSFER","JUBILACION","BECAS","DONATIVOS","REMESAS","BENEGOBIER","TRANS.HOG","TRANS.INST","ESTIM.ALQU","OTROS.INGR")
+
+Deciles_por_fuente_2018_NO<-Deciles_por_fuente_2018_NO%>%
+  mutate(prueba=TRABAJO+RENTAS+JUBILACION+BECAS+DONATIVOS+REMESAS+BENEGOBIER+TRANS.HOG+TRANS.INST+ESTIM.ALQU+OTROS.INGR)
+
+all.equal(Deciles_por_fuente_2018_NO$ING.COR,Deciles_por_fuente_2018_NO$prueba)
+
+Tasa_total_NO<-((Deciles_por_fuente_2018_NO$ING.COR-Deciles_por_fuente_2010_NO$ING.COR)/Deciles_por_fuente_2010_NO$ING.COR)*100
+
+
+# Trabajo
+
+Trabajo_NO<-data.frame(trabajo2010=Deciles_por_fuente_2010_NO$TRABAJO,
+                       trabajo2018=Deciles_por_fuente_2018_NO$TRABAJO,
+                       ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                       ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                       Tasa_total_NO)
+
+Trabajo_NO<-Trabajo_NO%>%
+  mutate(Trabajo_aporte=((trabajo2018-trabajo2010)/((ingcor2018-ingcor2010)))*Tasa_total_NO)
+
+
+# Rentas
+
+Rentas_NO<-data.frame(rentas2010=Deciles_por_fuente_2010_NO$RENTAS,
+                      rentas2018=Deciles_por_fuente_2018_NO$RENTAS,
+                      ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                      ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                      Tasa_total_NO)
+
+Rentas_NO<-Rentas_NO%>%
+  mutate(rentas_aporte=((rentas2018-rentas2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+#Jubilacion
+
+Jubilacion_NO<-data.frame(jubilacion2010=Deciles_por_fuente_2010_NO$JUBILACION,
+                          jubilacion2018=Deciles_por_fuente_2018_NO$JUBILACION,
+                          ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                          ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                          Tasa_total_NO)
+
+Jubilacion_NO<-Jubilacion_NO%>%
+  mutate(jubilacion_aporte=((jubilacion2018-jubilacion2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+#Becas
+
+Becas_NO<-data.frame(becas2010=Deciles_por_fuente_2010_NO$BECAS,
+                     becas2018=Deciles_por_fuente_2018_NO$BECAS,
+                     ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                     ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                     Tasa_total_NO)
+
+Becas_NO<-Becas_NO%>%
+  mutate(becas_aporte=((becas2018-becas2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+#Remesas
+
+Remesas_NO<-data.frame(remesas2010=Deciles_por_fuente_2010_NO$REMESAS,
+                       remesas2018=Deciles_por_fuente_2018_NO$REMESAS,
+                       ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                       ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                       Tasa_total_NO)
+
+Remesas_NO<-Remesas_NO%>%
+  mutate(becas_aporte=((remesas2018-remesas2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+#Donativos
+
+Donativos_NO<-data.frame(donativos2010=Deciles_por_fuente_2010_NO$DONATIVOS,
+                         donativos2018=Deciles_por_fuente_2018_NO$DONATIVOS,
+                         ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                         ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                         Tasa_total_NO)
+
+Donativos_NO<-Donativos_NO%>%
+  mutate(donativos_aporte=((donativos2018-donativos2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+#BENEGOBIER
+
+Benegob_NO<-data.frame(bene2010=Deciles_por_fuente_2010_NO$BENEGOBIER,
+                       bene2018=Deciles_por_fuente_2018_NO$BENEGOBIER,
+                       ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                       ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                       Tasa_total_NO)
+
+Benegob_NO<-Benegob_NO%>%
+  mutate(bene_aporte=((bene2018-bene2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+#TRANS.HOG
+
+trans_hog_NO<-data.frame(transhog2010=Deciles_por_fuente_2010_NO$TRANS.HOG,
+                         transhog2018=Deciles_por_fuente_2018_NO$TRANS.HOG,
+                         ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                         ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                         Tasa_total_NO)
+
+trans_hog_NO<-trans_hog_NO%>%
+  mutate(trans_hog_aporte=((transhog2018-transhog2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+
+#TRANS.INST
+
+trans_inst_NO<-data.frame(trans_inst2010=Deciles_por_fuente_2010_NO$TRANS.INST,
+                          trans_inst2018=Deciles_por_fuente_2018_NO$TRANS.INST,
+                          ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                          ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                          Tasa_total_NO)
+
+trans_inst_NO<-trans_inst_NO%>%
+  mutate(trans_inst_aporte=((trans_inst2018-trans_inst2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+
+#ESTIM.ALQU
+
+Estim_alqu_NO<-data.frame(estim2010=Deciles_por_fuente_2010_NO$ESTIM.ALQU,
+                          estim2018=Deciles_por_fuente_2018_NO$ESTIM.ALQU,
+                          ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                          ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                          Tasa_total_NO)
+
+Estim_alqu_NO<-Estim_alqu_NO%>%
+  mutate(estim_aporte=((estim2018-estim2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+
+#OTROS.INGR   
+
+Otros_NO<-data.frame(otros2010=Deciles_por_fuente_2010_NO$OTROS.INGR,
+                     otros2018=Deciles_por_fuente_2018_NO$OTROS.INGR,
+                     ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                     ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                     Tasa_total_NO)
+
+Otros_NO<-Otros_NO%>%
+  mutate(otors_aporte=((otros2018-otros2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+Cuadro_NO<-data.frame(Trabajo_NO$Trabajo_aporte,
+                      Rentas_NO$rentas_aporte,
+                      Jubilacion_NO$jubilacion_aporte,
+                      Becas_NO$becas_aporte,
+                      Remesas_NO$becas_aporte,
+                      Donativos_NO$donativos_aporte,
+                      Benegob_NO$bene_aporte,
+                      trans_hog_NO$trans_hog_aporte,
+                      trans_inst_NO$trans_inst_aporte,
+                      Estim_alqu_NO$estim_aporte,
+                      Otros_NO$otors_aporte)  
+
+prueba_NO<-(Trabajo_NO$Trabajo_aporte+
+              Rentas_NO$rentas_aporte+
+              Jubilacion_NO$jubilacion_aporte+
+              Becas_NO$becas_aporte+
+              Remesas_NO$becas_aporte+
+              Donativos_NO$donativos_aporte+
+              Benegob_NO$bene_aporte+
+              trans_hog_NO$trans_hog_aporte+
+              trans_inst_NO$trans_inst_aporte+
+              Estim_alqu_NO$estim_aporte+
+              Otros_NO$otors_aporte)
+
+all.equal(prueba_NO,Tasa_total_NO)
+
+
+names(Cuadro_NO)<-c("Labor","Capital","Pensions","Scholarships","Donations","Remittances","Government transfers",
+                    "Household transfers","Instituion transfers","Rent estimate","Others")      
+
+######### Construcción del cuadro final para el gráfico
+
+Cuadro_urbano<-Cuadro_urbano %>%
+  mutate("Size of the settlement"="Urban", Deciles=c("Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+urbano_melt<-melt(Cuadro_urbano)
+
+urbano_melt<-urbano_melt%>%
+  mutate(Deciles=fct_relevel(Deciles,"Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+Cuadro_NO<-Cuadro_NO %>%
+  mutate("Size of the settlement"="Rural", Deciles=c("Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+
+NO_melt<-melt(Cuadro_NO)
+
+NO_melt<-NO_melt%>%
+  mutate(Deciles=fct_relevel(Deciles,"Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+Cuadro_final<-rbind(urbano_melt,NO_melt)
+
+Cuadro_final<-Cuadro_final%>%
+  mutate(Deciles=fct_relevel(Deciles,"Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+####### Etiquetas para el gráfico
+
+labels_urbano<-Cuadro_final%>%
+  filter(`Size of the settlement`=="Urban")%>%
+  mutate(labels=ifelse(value>0,value,0))%>%
+  group_by(Deciles)%>%
+  summarize(sum(labels)+1.5)
+
+labels_urbano<-labels_urbano$`sum(labels) + 1.5`
+
+
+labels_NO<-Cuadro_final%>%
+  filter(`Size of the settlement`=="Rural")%>%
+  mutate(labels=ifelse(value>0,value,0))%>%
+  group_by(Deciles)%>%
+  summarize(sum(labels)+1.5)
+
+labels_NO<-labels_NO$`sum(labels) + 1.5`
+
+max<-Cuadro_final%>%
+  group_by(Deciles)%>%
+  filter(value>0)%>%
+  summarize(sum(value))
+
+max<-round(max(max$`sum(value)`)+2)
+
+min<-Cuadro_final%>%
+  group_by(Deciles)%>%
+  filter(value<0)%>%
+  summarize(sum(value))
+
+min<-round(min(min$`sum(value)`)-2)
+
+
+
+
+###### Gráfico
+
+
+GIC<-ggplot()+
+  geom_col(data = urbano_melt, mapping=aes(x=as.numeric(Deciles)-0.15, y=value, fill= as.factor(variable), group=`Size of the settlement`),
+           width = 0.25)+
+  geom_col(data = NO_melt, mapping=aes(x=as.numeric(Deciles)+0.15, y=value, fill= as.factor(variable), group=`Size of the settlement`),
+           width = 0.25)+
+  labs(title = "Mexico, Growth Incidence Curve by size of the settlement and source of income, 2010-2018",
+       y="Growth rate (total)",
+       x="Decile",
+       fill="Source of income")+
+  scale_y_continuous(breaks = seq(min,max,1))+
+  scale_x_continuous(breaks = seq(1,11,1),labels = c("Mean","I","II","III","IV","V","VI","VII","VIII","IX","X") )+
+  geom_hline(yintercept = 0)+
+  theme(axis.text.x = element_blank())+
+  annotate("text", label = round(Tasa_total_urbano[1],digits = 2),
+           x = 0.85, y = labels_urbano[1], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[1],digits = 2),
+           x = 1.15, y = labels_NO[1], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_urbano[2],digits = 2),
+           x = 1.85, y = labels_urbano[2], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[2],digits = 2),
+           x = 2.15, y = labels_NO[2], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_urbano[3],digits = 2),
+           x = 2.85, y = labels_urbano[3], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[3],digits = 2),
+           x = 3.15, y = labels_NO[3], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_urbano[4],digits = 2),
+           x = 3.85, y = labels_urbano[4], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[4],digits = 2),
+           x = 4.15, y = labels_NO[4], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_urbano[5],digits = 2),
+           x = 4.85, y = labels_urbano[5], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[5],digits = 2),
+           x = 5.15, y = labels_NO[5], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_urbano[6],digits = 2),
+           x = 5.85, y = labels_urbano[6], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[6],digits = 2),
+           x = 6.15, y = labels_NO[6], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_urbano[7],digits = 2),
+           x = 6.85, y = labels_urbano[7], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[7],digits = 2),
+           x = 7.15, y = labels_NO[7], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_urbano[8],digits = 2),
+           x = 7.85, y = labels_urbano[8], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[8],digits = 2),
+           x = 8.15, y = labels_NO[8], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_urbano[9],digits = 2),
+           x = 8.85, y = labels_urbano[9], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[9],digits = 2),
+           x = 9.15, y = labels_NO[9], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_urbano[10],digits = 2),
+           x = 9.85, y = labels_urbano[10], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[10],digits = 2),
+           x = 10.15, y = labels_NO[10], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_urbano[11],digits = 2),
+           x = 10.85, y = labels_urbano[11], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[11],digits = 2),
+           x = 11.15, y = labels_NO[11], size = 3, colour = "black",angle=45)+
+  theme_minimal()
+
+GIC<-ggplotly(GIC)
+
+GIC
+
+saveWidget(GIC,fil="GIC_Mexico_by_Size_of_the_settlement_and_source_of_income.html")
+
+rm(list=ls())
