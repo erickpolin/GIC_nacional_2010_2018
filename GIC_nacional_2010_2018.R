@@ -3596,7 +3596,7 @@ labels_NO<-labels_NO$`sum(labels) + 1.5`
 
 max<-Cuadro_final%>%
   group_by(Deciles)%>%
-  filter(value>0)
+  filter(value>0)%>%
   summarize(sum(value))
 
 max<-round(max(max$value)+2)
@@ -3622,11 +3622,12 @@ GIC<-ggplot()+
   labs(title = "Mexico, Growth Incidence Curve by ethnic group and source of income, 2010-2018",
        y="Growth rate (total)",
        x="Decile",
-       fill="Source of income")+
-  scale_y_continuous(breaks = seq(min,max,1))+
+       fill="Source of income",
+       caption="Left columns at each decile represent non-indigenous people and right columns represent indigenous people")+
   scale_x_continuous(breaks = seq(1,11,1),labels = c("Mean","I","II","III","IV","V","VI","VII","VIII","IX","X") )+
   geom_hline(yintercept = 0)+
-  theme(axis.text.x = element_blank())+
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank())+
   annotate("text", label = round(Tasa_total_indigena[1],digits = 2),
            x = 0.85, y = labels_indigena[1], size = 3, colour = "black",angle=45)+
   annotate("text", label = round(Tasa_total_NO[1],digits = 2),
@@ -6110,7 +6111,8 @@ min<-GIC_por_tama_derretida%>%
 min<-round(min(min$`sum(value)`)-2)
 
 GIC_por_tamanio<-GIC_por_tama_derretida%>%
-  mutate(Deciles=fct_relevel(Deciles,"Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"))%>%
+  mutate(Deciles=fct_relevel(Deciles,"Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"),
+         Rates=fct_relevel(Rates,"Urban","Rural"))%>%
   ggplot(aes(x=Deciles,y=value,fill=Rates))+
   geom_col(position=position_dodge())+
   labs(title = "Growth Incidence Curve Nacional by size of the settelment 2010-2018",
@@ -6569,7 +6571,8 @@ GIC<-ggplot()+
   labs(title = "Mexico, Growth Incidence Curve by size of the settlement and source of income, 2010-2018",
        y="Growth rate (total)",
        x="Decile",
-       fill="Source of income")+
+       fill="Source of income",
+       caption="Right columns at each decile represent rural localities and left colums represent urban areas")+
   scale_y_continuous(breaks = seq(min,max,1))+
   scale_x_continuous(breaks = seq(1,11,1),labels = c("Mean","I","II","III","IV","V","VI","VII","VIII","IX","X") )+
   geom_hline(yintercept = 0)+
