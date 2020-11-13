@@ -3089,6 +3089,7 @@ GIC<-cuadro_final%>%
        fill="Source of
   income")+
   geom_hline(yintercept = 0)+
+  scale_y_continuous(breaks = seq(-10,30,10),labels = c("","","","",""))+
   annotate("text", x= "Mean", y= labels[1], label=round(Tasa_total[1],2))+
   annotate("text", x= "I", y= labels[2], label=round(Tasa_total[2],2))+
   annotate("text", x= "II", y= labels[3], label=round(Tasa_total[3],2))+
@@ -3100,7 +3101,6 @@ GIC<-cuadro_final%>%
   annotate("text", x= "VIII", y= labels[9], label=round(Tasa_total[9],2))+
   annotate("text", x= "IX", y= labels[10], label=round(Tasa_total[10],2))+
   annotate("text", x= "X", y= labels[11], label=round(Tasa_total[11],2))+
-  scale_y_continuous(breaks=seq(min,max,1))+
   theme_minimal()
 
 GIC<-ggplotly(GIC)
@@ -3726,34 +3726,21 @@ media_2010<-round(svymean(Conc2010$HogarIndig,design_2010)[1],2)
 Prop_2010<-ggplot()+
   geom_col(data = Ethinc_group_by_decile_2010, aes(x=Deciles, y=V1))+
     geom_hline(yintercept = media_2010)+
-  labs(title = "  Mexico
-  Proportion of indigenous households by decile of income
-  in 2010",
-       y="Proportion of indigenous households",
-       x="Deciles")+
+  scale_y_continuous(limits = c(0,0.6),breaks=seq(0,0.6,0.1))+
+  ggtitle("2010")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  labs(y="",
+       x="")+
   annotate("text", label= "Mean = 0.26", x= 9, y= media_2010+0.02,colour = "black")+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank())+
-  scale_y_continuous(breaks=seq(0,0.6,0.1))+
-  geom_text(data = Ethinc_group_by_decile_2010, aes(x=Deciles,y=V1+0.02,label=round(V1,2)))
+    geom_text(data = Ethinc_group_by_decile_2010, aes(x=Deciles,y=V1+0.02,label=round(V1,2)))
 
 Prop_2010
 
 
 
-rm(list=ls())
-
-
-
-
-
-
-
-
-
-
-
-
+#rm(list=ls())
 
 ###### Ahora urbanos
 
@@ -3785,32 +3772,21 @@ media_2010<-round(svymean(Conc2010$HogarIndig,design_2010)[1],2)
 
 #Gráfico
 
-Prop_2010<-ggplot()+
+Prop_2010_urban<-ggplot()+
   geom_col(data = Ethinc_group_by_decile_2010, aes(x=Deciles, y=V1))+
   geom_hline(yintercept = media_2010)+
-  labs(title = "  Mexico
-  Proportion of indigenous households by decile of income
-  within settlements with a population above 15,000 residents in 2010",
-       y="Proportion of indigenous households",
-       x="Deciles")+
+  labs(title = "",
+       y="",
+       x="")+
   annotate("text", label= "Mean = 0.19", x= 9, y= media_2010+0.02,colour = "black")+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank())+
-  scale_y_continuous(breaks=seq(0,0.6,0.1))+
+  scale_y_continuous(limits = c(0,0.6),breaks=seq(0,0.6,0.1))+
   geom_text(data = Ethinc_group_by_decile_2010, aes(x=Deciles,y=V1+0.02,label=round(V1,2)))
 
-Prop_2010
+Prop_2010_urban
 
-rm(list=ls())
-
-
-
-
-
-
-
-
-
+#rm(list=ls())
 
 
 ###### Ahora rurales
@@ -3843,34 +3819,21 @@ media_2010<-round(svymean(Conc2010$HogarIndig,design_2010)[1],2)
 
 #Gráfico
 
-Prop_2010<-ggplot()+
+Prop_2010_rural<-ggplot()+
   geom_col(data = Ethinc_group_by_decile_2010, aes(x=Deciles, y=V1))+
   geom_hline(yintercept = media_2010)+
-  labs(title = "  Mexico
-  Proportion of indigenous households by decile of income
-  within settlements with a population below 15,000 residents in 2010",
-       y="Proportion of indigenous households",
-       x="Deciles")+
+  labs(title = "",
+       y="",
+       x="")+
   annotate("text", label= "Mean = 0.37", x= 9, y= media_2010+0.02,colour = "black")+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank())+
-  scale_y_continuous(breaks=seq(0,0.6,0.1))+
+  scale_y_continuous(limits = c(0,0.6),breaks=seq(0,0.6,0.1))+
   geom_text(data = Ethinc_group_by_decile_2010, aes(x=Deciles,y=V1+0.02,label=round(V1,2)))
 
-Prop_2010
+Prop_2010_rural
 
-rm(list=ls())
-
-
-
-
-
-
-
-
-
-
-
+#rm(list=ls())
 
 ###2018
 
@@ -3903,20 +3866,19 @@ media_2018<-round(svymean(Conc2018$HogarIndig,design_2018)[1],2)
 Prop_2018<-ggplot()+
   geom_col(data = Ethnic_group_by_decile_2018, aes(x=Deciles, y=V1))+
   geom_hline(yintercept = media_2018)+
-  labs(title = "  Mexico
-  Proportion of indigenous households by decile of income
-  2018",
-       y="Proportion of indigenous households",
-       x="Deciles")+
-  annotate("text", label= "Mean = 0.34", x= 8, y= media_2018+0.02,colour = "black")+
+  ggtitle("2018")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  labs(y="",
+       x="")+
+  annotate("text", label= "Mean = 0.34", x= 9, y= media_2018+0.02,colour = "black")+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank())+
-  scale_y_continuous(breaks=seq(0,0.6,0.1))+
+  scale_y_continuous(limits = c(0,0.6),breaks=seq(0,0.6,0.1))+
   geom_text(data = Ethnic_group_by_decile_2018, aes(x=Deciles,y=V1+0.02,label=round(V1,2)))
 
 Prop_2018
 
-rm(list=ls())
+#rm(list=ls())
 
   #### Urbanos
 
@@ -3948,24 +3910,22 @@ media_2018<-round(svymean(Conc2018$HogarIndig,design_2018)[1],2)
 
 #Gráfico
 
-Prop_2018<-ggplot()+
+Prop_2018_urban<-ggplot()+
   geom_col(data = Ethnic_group_by_decile_2018, aes(x=Deciles, y=V1))+
   geom_hline(yintercept = media_2018)+
-  labs(title = "   Mexico
-  Proportion of indigenous households by decile of income
-  within settlements with a population above 15,000 residents in 2018",
-       y="Proportion of indigenous households",
-       x="Deciles")+
-  annotate("text", label= "Mean = 0.26", x= 8, y= media_2018+0.02,colour = "black")+
+  labs(title = "",
+       y="",
+       x="")+
+  annotate("text", label= "Mean = 0.26", x= 9, y= media_2018+0.02,colour = "black")+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank())+
-  scale_y_continuous(breaks=seq(0,0.6,0.1))+
+  scale_y_continuous(limits = c(0,0.6),breaks=seq(0,0.6,0.1))+
   geom_text(data = Ethnic_group_by_decile_2018, aes(x=Deciles,y=V1+0.02,label=round(V1,2)))
 
 
-Prop_2018
+Prop_2018_urban
 
-rm(list=ls())
+#rm(list=ls())
 
 
 #Rurales
@@ -3999,24 +3959,39 @@ media_2018<-round(svymean(Conc2018$HogarIndig,design_2018)[1],2)
 
 #Gráfico
 
-Prop_2018<-ggplot()+
+Prop_2018_rural<-ggplot()+
   geom_col(data = Ethnic_group_by_decile_2018, aes(x=Deciles, y=V1))+
   geom_hline(yintercept = media_2018)+
-  labs(title = "   Mexico
-  Proportion of indigenous households by decile of income
-  within settlements with a population below 15,000 residents in 2018",
-       y="Proportion of indigenous households",
-       x="Deciles")+
-  annotate("text", label= "Mean = 0.46", x= 8, y= media_2018+0.02,colour = "black")+
+  labs(title = "",
+       y="",
+       x="")+
+  annotate("text", label= "Mean = 0.46", x= 9, y= media_2018+0.02,colour = "black")+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank())+
-  scale_y_continuous(breaks=seq(0,0.6,0.1))+
+  scale_y_continuous(limits = c(0,0.7),breaks=seq(0,0.6,0.1))+
   geom_text(data = Ethnic_group_by_decile_2018, aes(x=Deciles,y=V1+0.02,label=round(V1,2)))
 
 
-Prop_2018
+Prop_2018_rural
 
-rm(list=ls())
+#rm(list=ls())
+
+#ahora, a juntarlos
+library(ggpubr)
+figure<-ggarrange(Prop_2010,Prop_2018,
+          Prop_2010_urban,Prop_2018_urban,
+          Prop_2010_rural,Prop_2018_rural,
+          labels = c("National", "", "Urban","","Rural"),
+          ncol = 2, nrow = 3)
+annotate_figure(figure,
+                top = text_grob("Mexico
+  Proportion of indigenous households by decile of income and size of settlement", color = "black", face = "bold", size = 14),
+                bottom = text_grob("Rural areas are defined as settlements with less than 2,500 habitants by the National Institute of Geography and Statistics.", color = "black",
+                                   hjust = 1, x = 1, face = "italic", size = 10),
+                left = text_grob("Proportion of indigenous households", color = "black", rot = 90))
+
+
+
 
 ########## Hogares debajo de la linea de pobreza ######
 
@@ -4062,6 +4037,165 @@ pobreza_rural_moderada_2010<-svymean(~pobreza_rural_moderada, design=design_2010
 
 pobreza_rural_moderada_2010
 
+
+
+#### Urbanos
+
+Conc2010<-read.dbf("Conc2010.dbf",as.is = T)
+
+Conc2010<-Conc2010%>%
+  mutate(Canasta_rural_extrema=712.77*3,
+         Canasta_rural_moderada=1378.05*3,
+         Canasta_urbana_extrema=1012.12*3,
+         Canasta_urbana_moderada=2185.79*3)
+
+Conc2010<-Conc2010%>%
+  mutate(linea_de_pobreza_rural_extrema=ifelse(Small==1,Canasta_rural_extrema*tot_integ,0),
+         linea_de_pobreza_rural_moderada=ifelse(Small==1,Canasta_rural_moderada*tot_integ,0),
+         linea_de_pobreza_urbana_extrema=ifelse(Small==0,Canasta_urbana_extrema*tot_integ,0),
+         linea_de_pobreza_urbana_moderada=ifelse(Small==0,Canasta_urbana_moderada*tot_integ,0),
+         pobreza_rural_extrema=ifelse(ing_cor<linea_de_pobreza_rural_extrema,1,0),
+         pobreza_rural_moderada=ifelse(ing_cor<linea_de_pobreza_rural_moderada,1,0),
+         pobreza_urbana_extrema=ifelse(ing_cor<linea_de_pobreza_urbana_extrema,1,0),
+         pobreza_urbana_moderada=ifelse(ing_cor<linea_de_pobreza_urbana_moderada,1,0))
+
+Conc2010<-Conc2010%>%
+  filter(Small==0)
+
+design_2010<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2010)
+
+pobreza_urbana_extrema_2010<-svymean(~pobreza_urbana_extrema, design=design_2010)
+
+pobreza_urbana_extrema_2010
+
+pobreza_urbana_moderada_2010<-svymean(~pobreza_urbana_moderada, design=design_2010)
+
+pobreza_urbana_moderada_2010
+
+
+
+##### Rurales 2018
+
+
+library(foreign)
+library(survey)
+library(doBy)
+library(reldist)
+library(tidyverse)
+options(survey.lonely.psu="adjust")
+
+#reading the data
+setwd("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/ENIGH 2018/ENIGH2018")
+Conc2018<-read.dbf("Conc2018.dbf",as.is = T)
+
+Conc2018<-Conc2018%>%
+  mutate(Canasta_rural_extrema=1113.23*3,
+         Canasta_rural_moderada=2008.71*3,
+         Canasta_urbana_extrema=1556.24*3,
+         Canasta_urbana_moderada=3089.37*3)
+
+Conc2018<-Conc2018%>%
+  mutate(linea_de_pobreza_rural_extrema=ifelse(Small==1,Canasta_rural_extrema*tot_integ,0),
+         linea_de_pobreza_rural_moderada=ifelse(Small==1,Canasta_rural_moderada*tot_integ,0),
+         linea_de_pobreza_urbana_extrema=ifelse(Small==0,Canasta_urbana_extrema*tot_integ,0),
+         linea_de_pobreza_urbana_moderada=ifelse(Small==0,Canasta_urbana_moderada*tot_integ,0),
+         pobreza_rural_extrema=ifelse(ing_cor<linea_de_pobreza_rural_extrema,1,0),
+         pobreza_rural_moderada=ifelse(ing_cor<linea_de_pobreza_rural_moderada,1,0),
+         pobreza_urbana_extrema=ifelse(ing_cor<linea_de_pobreza_urbana_extrema,1,0),
+         pobreza_urbana_moderada=ifelse(ing_cor<linea_de_pobreza_urbana_moderada,1,0))
+
+Conc2018<-Conc2018%>%
+  filter(Small==1)
+
+design_2018<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2018)
+
+pobreza_rural_extrema_2018<-svymean(~pobreza_rural_extrema, design=design_2018)
+
+pobreza_rural_extrema_2018
+
+pobreza_rural_moderada_2018<-svymean(~pobreza_rural_moderada, design=design_2018)
+
+pobreza_rural_moderada_2018
+
+
+#### urbanos 2018
+
+setwd("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/ENIGH 2018/ENIGH2018")
+Conc2018<-read.dbf("Conc2018.dbf",as.is = T)
+
+Conc2018<-Conc2018%>%
+  mutate(Canasta_rural_extrema=1113.23*3,
+         Canasta_rural_moderada=2008.71*3,
+         Canasta_urbana_extrema=1556.24*3,
+         Canasta_urbana_moderada=3089.37*3)
+
+Conc2018<-Conc2018%>%
+  mutate(linea_de_pobreza_rural_extrema=ifelse(Small==1,Canasta_rural_extrema*tot_integ,0),
+         linea_de_pobreza_rural_moderada=ifelse(Small==1,Canasta_rural_moderada*tot_integ,0),
+         linea_de_pobreza_urbana_extrema=ifelse(Small==0,Canasta_urbana_extrema*tot_integ,0),
+         linea_de_pobreza_urbana_moderada=ifelse(Small==0,Canasta_urbana_moderada*tot_integ,0),
+         pobreza_rural_extrema=ifelse(ing_cor<linea_de_pobreza_rural_extrema,1,0),
+         pobreza_rural_moderada=ifelse(ing_cor<linea_de_pobreza_rural_moderada,1,0),
+         pobreza_urbana_extrema=ifelse(ing_cor<linea_de_pobreza_urbana_extrema,1,0),
+         pobreza_urbana_moderada=ifelse(ing_cor<linea_de_pobreza_urbana_moderada,1,0))
+
+Conc2018<-Conc2018%>%
+  filter(Small==0)
+
+design_2018<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2018)
+
+pobreza_urbana_extrema_2018<-svymean(~pobreza_urbana_extrema, design=design_2018)
+
+pobreza_urbana_extrema_2018
+
+pobreza_urbana_moderada_2018<-svymean(~pobreza_urbana_moderada, design=design_2018)
+
+pobreza_urbana_moderada_2018
+
+########## Lineas de pobreza por raza ##########
+library(foreign)
+library(tidyverse)
+library(plotly)
+library(htmlwidgets)
+library(reshape2)
+library(survey)
+options(survey.lonely.psu="adjust")
+
+###2010 rurales
+
+setwd("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/ENIGH 2010/ENIGH2010")
+Conc2010<-read.dbf("Conc2010.dbf",as.is = T)
+
+Conc2010<-Conc2010%>%
+  mutate(Canasta_rural_extrema=712.77*3,
+         Canasta_rural_moderada=1378.05*3,
+         Canasta_urbana_extrema=1012.12*3,
+         Canasta_urbana_moderada=2185.79*3)
+
+Conc2010<-Conc2010%>%
+  mutate(linea_de_pobreza_rural_extrema=ifelse(Small==1,Canasta_rural_extrema*tot_integ,0),
+         linea_de_pobreza_rural_moderada=ifelse(Small==1,Canasta_rural_moderada*tot_integ,0),
+         linea_de_pobreza_urbana_extrema=ifelse(Small==0,Canasta_urbana_extrema*tot_integ,0),
+         linea_de_pobreza_urbana_moderada=ifelse(Small==0,Canasta_urbana_moderada*tot_integ,0),
+         pobreza_rural_extrema=ifelse(ing_cor<linea_de_pobreza_rural_extrema,1,0),
+         pobreza_rural_moderada=ifelse(ing_cor<linea_de_pobreza_rural_moderada,1,0),
+         pobreza_urbana_extrema=ifelse(ing_cor<linea_de_pobreza_urbana_extrema,1,0),
+         pobreza_urbana_moderada=ifelse(ing_cor<linea_de_pobreza_urbana_moderada,1,0))
+
+Conc2010<-Conc2010%>%
+  filter(Small==1)
+
+design_2010<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2010)
+
+pobreza_rural_extrema_2010<-svyby(~pobreza_rural_extrema,by=Conc2010$HogarIndig, design=design_2010,svymean)
+
+pobreza_rural_extrema_2010
+
+pobreza_rural_moderada_2010<-svyby(~pobreza_rural_moderada,by=Conc2010$HogarIndig, design=design_2010,svymean)
+
+pobreza_rural_moderada_2010
+
+rm(list = ls())
 
 
 #### Urbanos
