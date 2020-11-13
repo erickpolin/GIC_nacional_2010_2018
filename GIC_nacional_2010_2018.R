@@ -3624,10 +3624,12 @@ GIC<-ggplot()+
        x="Decile",
        fill="Source of income",
        caption="Left columns at each decile represent non-indigenous people and right columns represent indigenous people")+
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())+
+  scale_y_continuous(breaks = seq(-20,20,40),labels = c("",""))+
   scale_x_continuous(breaks = seq(1,11,1),labels = c("Mean","I","II","III","IV","V","VI","VII","VIII","IX","X") )+
   geom_hline(yintercept = 0)+
-  theme(axis.text.x = element_blank(),
-        axis.text.y = element_blank())+
   annotate("text", label = round(Tasa_total_indigena[1],digits = 2),
            x = 0.85, y = labels_indigena[1], size = 3, colour = "black",angle=45)+
   annotate("text", label = round(Tasa_total_NO[1],digits = 2),
@@ -6573,7 +6575,7 @@ GIC<-ggplot()+
        x="Decile",
        fill="Source of income",
        caption="Right columns at each decile represent rural localities and left colums represent urban areas")+
-  scale_y_continuous(breaks = seq(min,max,1))+
+  scale_y_continuous(breaks = seq(-16,26,10),labels = c("","","","",""))+
   scale_x_continuous(breaks = seq(1,11,1),labels = c("Mean","I","II","III","IV","V","VI","VII","VIII","IX","X") )+
   geom_hline(yintercept = 0)+
   theme(axis.text.x = element_blank())+
