@@ -3993,7 +3993,7 @@ annotate_figure(figure,
 
 
 
-########## Hogares debajo de la linea de pobreza ######
+########## Hogares debajo de la linea de pobreza rural y urbano ######
 
 library(foreign)
 library(tidyverse)
@@ -4223,11 +4223,11 @@ Conc2010<-Conc2010%>%
 
 design_2010<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2010)
 
-pobreza_urbana_extrema_2010<-svymean(~pobreza_urbana_extrema, design=design_2010)
+pobreza_urbana_extrema_2010<-svyby(~pobreza_urbana_extrema, by=Conc2010$HogarIndig,design=design_2010,svymean)
 
 pobreza_urbana_extrema_2010
 
-pobreza_urbana_moderada_2010<-svymean(~pobreza_urbana_moderada, design=design_2010)
+pobreza_urbana_moderada_2010<-svyby(~pobreza_urbana_moderada, by=Conc2010$HogarIndig, design=design_2010,svymean)
 
 pobreza_urbana_moderada_2010
 
@@ -4268,11 +4268,11 @@ Conc2018<-Conc2018%>%
 
 design_2018<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2018)
 
-pobreza_rural_extrema_2018<-svymean(~pobreza_rural_extrema, design=design_2018)
+pobreza_rural_extrema_2018<-svyby(~pobreza_rural_extrema,by=Conc2010$HogarIndig, design=design_2018,svymean)
 
 pobreza_rural_extrema_2018
 
-pobreza_rural_moderada_2018<-svymean(~pobreza_rural_moderada, design=design_2018)
+pobreza_rural_moderada_2018<-svyby(~pobreza_rural_moderada,by=Conc2010$HogarIndig, design=design_2018,svymean)
 
 pobreza_rural_moderada_2018
 
@@ -4303,11 +4303,11 @@ Conc2018<-Conc2018%>%
 
 design_2018<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2018)
 
-pobreza_urbana_extrema_2018<-svymean(~pobreza_urbana_extrema, design=design_2018)
+pobreza_urbana_extrema_2018<-svyby(~pobreza_urbana_extrema, by=Conc2010$HogarIndig,design=design_2018, svymean)
 
 pobreza_urbana_extrema_2018
 
-pobreza_urbana_moderada_2018<-svymean(~pobreza_urbana_moderada, design=design_2018)
+pobreza_urbana_moderada_2018<-svyby(~pobreza_urbana_moderada,by=Conc2010$HogarIndig, design=design_2018,svymean)
 
 pobreza_urbana_moderada_2018
 
