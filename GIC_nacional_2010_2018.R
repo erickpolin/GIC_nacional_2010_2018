@@ -4195,7 +4195,7 @@ pobreza_rural_moderada_2010<-svyby(~pobreza_rural_moderada,by=Conc2010$HogarIndi
 
 pobreza_rural_moderada_2010
 
-rm(list = ls())
+
 
 
 #### Urbanos
@@ -4310,6 +4310,8 @@ pobreza_urbana_extrema_2018
 pobreza_urbana_moderada_2018<-svyby(~pobreza_urbana_moderada,by=Conc2010$HogarIndig, design=design_2018,svymean)
 
 pobreza_urbana_moderada_2018
+
+
 
 ########## Ingresos por fuente por Decil URBANO 2010 ##########
 library(foreign)
