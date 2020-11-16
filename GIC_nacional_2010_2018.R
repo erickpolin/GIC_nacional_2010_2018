@@ -3594,22 +3594,6 @@ labels_NO<-Cuadro_final%>%
 
 labels_NO<-labels_NO$`sum(labels) + 1.5`
 
-max<-Cuadro_final%>%
-  group_by(Deciles)%>%
-  filter(value>0)%>%
-  summarize(sum(value))
-
-max<-round(max(max$value)+2)
-
-min<-Cuadro_final%>%
-  group_by(Deciles)%>%
-  filter(value<0)%>%
-summarize(sum(value))
-
-min<-round(min(min$`sum(value)`)-2)
-
-
-
 
 ###### Gráfico
 
@@ -3623,7 +3607,7 @@ GIC<-ggplot()+
        y="Growth rate (total)",
        x="Decile",
        fill="Source of income",
-       caption="Left columns at each decile represent non-indigenous people and right columns represent indigenous people")+
+       caption="Left columns at each decile represent indigenous people and right columns represent non-indigenous people")+
   theme(axis.text.x = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank())+
@@ -3675,6 +3659,8 @@ GIC<-ggplot()+
   annotate("text", label = round(Tasa_total_NO[11],digits = 2),
            x = 11.15, y = labels_NO[11], size = 3, colour = "black",angle=45)+
   theme_minimal()
+
+GIC
 
 GIC<-ggplotly(GIC)
 
@@ -11514,4 +11500,5 @@ GIC
 saveWidget(GIC,fil="GIC_Mexico_urban_by_ethnic_group_and_source_of_income.html")
 
 rm(list=ls())
+
 
