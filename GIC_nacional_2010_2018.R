@@ -10552,7 +10552,7 @@ Deciles_por_fuente_2010_indigena<-Deciles_por_fuente_2010_indigena%>%
 
 all.equal(Deciles_por_fuente_2010_indigena$ING.COR,Deciles_por_fuente_2010_indigena$prueba)
 
-Deciles_por_fuente_2018_indigena<-read.dbf("Nacional INDIGENA Ingresos por fuente por DECIL estimaciones 2018.dbf")
+Deciles_por_fuente_2018_indigena<-read.dbf("Nacional RURAL INDIGENA Ingresos por fuente por DECIL estimaciones 2018.dbf")
 
 names(Deciles_por_fuente_2018_indigena)=c("ING.COR","TRABAJO","SUBORDINADO", "NEGOCIOS","OTROS.TRAB","RENTAS","UTILIDAD","ARRENDA",
                                           "TRANSFER","JUBILACION","BECAS","DONATIVOS","REMESAS","BENEGOBIER","TRANS.HOG","TRANS.INST","ESTIM.ALQU","OTROS.INGR")
@@ -10719,7 +10719,7 @@ names(Cuadro_indigena)<-c("Labor","Capital","Pensions","Scholarships","Donations
 
 #No indigena                         
 
-Deciles_por_fuente_2010_NO<-read.dbf("Nacional NO por fuente por DECIL estimaciones 2010.dbf")
+Deciles_por_fuente_2010_NO<-read.dbf("Nacional RURAL NO por fuente por DECIL estimaciones 2010.dbf")
 names(Deciles_por_fuente_2010_NO)=c("ING.COR","TRABAJO","SUBORDINADO", "NEGOCIOS","OTROS.TRAB","RENTAS","UTILIDAD","ARRENDA",
                                     "TRANSFER","JUBILACION","BECAS","DONATIVOS","REMESAS","BENEGOBIER","TRANS.HOG","TRANS.INST","ESTIM.ALQU","OTROS.INGR")
 
@@ -10731,7 +10731,7 @@ all.equal(Deciles_por_fuente_2010_NO$ING.COR,Deciles_por_fuente_2010_NO$prueba)
 ###
 
 
-Deciles_por_fuente_2018_NO<-read.dbf("Nacional NO Ingresos por fuente por DECIL estimaciones 2018.dbf")
+Deciles_por_fuente_2018_NO<-read.dbf("Nacional RURAL NO Ingresos por fuente por DECIL estimaciones 2018.dbf")
 
 names(Deciles_por_fuente_2018_NO)=c("ING.COR","TRABAJO","SUBORDINADO", "NEGOCIOS","OTROS.TRAB","RENTAS","UTILIDAD","ARRENDA",
                                     "TRANSFER","JUBILACION","BECAS","DONATIVOS","REMESAS","BENEGOBIER","TRANS.HOG","TRANS.INST","ESTIM.ALQU","OTROS.INGR")
@@ -10942,20 +10942,6 @@ labels_NO<-Cuadro_final%>%
 
 labels_NO<-labels_NO$`sum(labels) + 1.5`
 
-max<-Cuadro_final%>%
-  group_by(Deciles)%>%
-  filter(value>0)%>%
-  summarize(sum(value))
-
-max<-round(max(max$value)+2)
-
-min<-Cuadro_final%>%
-  group_by(Deciles)%>%
-  filter(value<0)%>%
-  summarize(sum(value))
-
-min<-round(min(min$`sum(value)`)-2)
-
 
 
 
@@ -10967,11 +10953,14 @@ GIC<-ggplot()+
            width = 0.25)+
   geom_col(data = NO_melt, mapping=aes(x=as.numeric(Deciles)+0.15, y=value, fill= as.factor(variable), group=`Ethnic group`),
            width = 0.25)+
-  labs(title = "Mexico, Growth Incidence Curve by ethnic group and source of income, 2010-2018",
+  labs(title = "Mexico
+Rural localities
+Growth Incidence Curve by ethnic group and source of income
+2010-2018",
        y="Growth rate (total)",
        x="Decile",
        fill="Source of income",
-       caption="Left columns at each decile represent non-indigenous people and right columns represent indigenous people")+
+       caption="Left columns at each decile represent indigenous people and right columns represent non-indigenous people")+
   theme(axis.text.x = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank())+
@@ -11024,11 +11013,505 @@ GIC<-ggplot()+
            x = 11.15, y = labels_NO[11], size = 3, colour = "black",angle=45)+
   theme_minimal()
 
+GIC
+
 GIC<-ggplotly(GIC)
 
 GIC
 
-saveWidget(GIC,fil="GIC_Mexico_by_ethnic_group_and_source_of_income.html")
+saveWidget(GIC,fil="GIC_Mexico_RURAL_by_ethnic_group_and_source_of_income.html")
+
+rm(list=ls())
+
+
+########## GIC por raza por fuente urbana ###############
+library(foreign)
+library(tidyverse)
+library(plotly)
+library(htmlwidgets)
+library(reshape2)
+
+
+setwd(c("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/GIC Nacional 2010 - 2018/GIC_nacional_2010_2018"))
+
+Deciles_por_fuente_2010_indigena<-read.dbf("Nacional URBANO INDIGENA por fuente por DECIL estimaciones 2010.dbf")
+
+names(Deciles_por_fuente_2010_indigena)=c("ING.COR","TRABAJO","SUBORDINADO", "NEGOCIOS","OTROS.TRAB","RENTAS","UTILIDAD","ARRENDA",
+                                          "TRANSFER","JUBILACION","BECAS","DONATIVOS","REMESAS","BENEGOBIER","TRANS.HOG","TRANS.INST","ESTIM.ALQU","OTROS.INGR")
+
+Deciles_por_fuente_2010_indigena<-Deciles_por_fuente_2010_indigena%>%
+  mutate(prueba=TRABAJO+RENTAS+JUBILACION+BECAS+DONATIVOS+REMESAS+BENEGOBIER+TRANS.HOG+TRANS.INST+ESTIM.ALQU+OTROS.INGR)
+
+all.equal(Deciles_por_fuente_2010_indigena$ING.COR,Deciles_por_fuente_2010_indigena$prueba)
+
+Deciles_por_fuente_2018_indigena<-read.dbf("Nacional URBANO INDIGENA Ingresos por fuente por DECIL estimaciones 2018.dbf")
+
+names(Deciles_por_fuente_2018_indigena)=c("ING.COR","TRABAJO","SUBORDINADO", "NEGOCIOS","OTROS.TRAB","RENTAS","UTILIDAD","ARRENDA",
+                                          "TRANSFER","JUBILACION","BECAS","DONATIVOS","REMESAS","BENEGOBIER","TRANS.HOG","TRANS.INST","ESTIM.ALQU","OTROS.INGR")
+
+Deciles_por_fuente_2018_indigena<-Deciles_por_fuente_2018_indigena%>%
+  mutate(prueba=TRABAJO+RENTAS+JUBILACION+BECAS+DONATIVOS+REMESAS+BENEGOBIER+TRANS.HOG+TRANS.INST+ESTIM.ALQU+OTROS.INGR)
+
+all.equal(Deciles_por_fuente_2018_indigena$ING.COR,Deciles_por_fuente_2018_indigena$prueba)
+
+################################## Indigenous 
+Tasa_total_indigena<-((Deciles_por_fuente_2018_indigena$ING.COR-Deciles_por_fuente_2010_indigena$ING.COR)/
+                        Deciles_por_fuente_2010_indigena$ING.COR)*100
+
+#### trabajo
+
+Trabajo_indigena<-data.frame(trabajo2010=Deciles_por_fuente_2010_indigena$TRABAJO,
+                             trabajo2018=Deciles_por_fuente_2018_indigena$TRABAJO,
+                             ing_cor2010=Deciles_por_fuente_2010_indigena$ING.COR,
+                             ing_cor2018=Deciles_por_fuente_2018_indigena$ING.COR,
+                             Tasa_total_indigena)
+
+Trabajo_indigena<-Trabajo_indigena%>%
+  mutate(trabajo_aporte=((trabajo2018-trabajo2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_indigena)
+
+#### renta
+
+Renta_indigena<-data.frame(renta2010=Deciles_por_fuente_2010_indigena$RENTAS,
+                           renta2018=Deciles_por_fuente_2018_indigena$RENTAS,
+                           ing_cor2010=Deciles_por_fuente_2010_indigena$ING.COR,
+                           ing_cor2018=Deciles_por_fuente_2018_indigena$ING.COR,
+                           Tasa_total_indigena)
+
+Renta_indigena<-Renta_indigena%>%
+  mutate(rentas_aporte=((renta2018-renta2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_indigena)
+
+#### Jubilaciones
+
+Jubilaciones_indigena<-data.frame(jubilaciones2010=Deciles_por_fuente_2010_indigena$JUBILACION,
+                                  jubilaciones2018=Deciles_por_fuente_2018_indigena$JUBILACION,
+                                  ing_cor2010=Deciles_por_fuente_2010_indigena$ING.COR,
+                                  ing_cor2018=Deciles_por_fuente_2018_indigena$ING.COR,
+                                  Tasa_total_indigena)
+
+Jubilaciones_indigena<-Jubilaciones_indigena%>%
+  mutate(jubilaciones_aporte=((jubilaciones2018-jubilaciones2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_indigena)
+
+## Becas
+
+Becas_indigena<-data.frame(becas2010=Deciles_por_fuente_2010_indigena$BECAS,
+                           becas2018=Deciles_por_fuente_2018_indigena$BECAS,
+                           ing_cor2010=Deciles_por_fuente_2010_indigena$ING.COR,
+                           ing_cor2018=Deciles_por_fuente_2018_indigena$ING.COR,
+                           Tasa_total_indigena)
+
+Becas_indigena<-Becas_indigena%>%
+  mutate(becas_aporte=((becas2018-becas2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_indigena)
+
+## Donativos
+
+Donativos_indigena<-data.frame(donativos2010=Deciles_por_fuente_2010_indigena$DONATIVOS,
+                               donativos2018=Deciles_por_fuente_2018_indigena$DONATIVOS,
+                               ing_cor2010=Deciles_por_fuente_2010_indigena$ING.COR,
+                               ing_cor2018=Deciles_por_fuente_2018_indigena$ING.COR,
+                               Tasa_total_indigena)
+
+Donativos_indigena<-Donativos_indigena%>%
+  mutate(donativos_aporte=((donativos2018-donativos2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_indigena)
+
+### Remesas
+
+Remesas_indigena<-data.frame(remesas2010=Deciles_por_fuente_2010_indigena$REMESAS,
+                             remesas2018=Deciles_por_fuente_2018_indigena$REMESAS,
+                             ing_cor2010=Deciles_por_fuente_2010_indigena$ING.COR,
+                             ing_cor2018=Deciles_por_fuente_2018_indigena$ING.COR,
+                             Tasa_total_indigena)
+
+Remesas_indigena<-Remesas_indigena%>%
+  mutate(remesas_aporte=((remesas2018-remesas2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_indigena)
+
+### Bene Gob
+
+Benegob_indigena<-data.frame(benegob2010=Deciles_por_fuente_2010_indigena$BENEGOBIER,
+                             benegob2018=Deciles_por_fuente_2018_indigena$BENEGOBIER,
+                             ing_cor2010=Deciles_por_fuente_2010_indigena$ING.COR,
+                             ing_cor2018=Deciles_por_fuente_2018_indigena$ING.COR,
+                             Tasa_total_indigena)
+
+Benegob_indigena<-Benegob_indigena%>%
+  mutate(benegob_aporte=((benegob2018-benegob2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_indigena)
+
+### Trans de hogares
+
+Trans_hogares_indigena<-data.frame(transdehogares2010=Deciles_por_fuente_2010_indigena$TRANS.HOG,
+                                   transdehogares2018=Deciles_por_fuente_2018_indigena$TRANS.HOG,
+                                   ing_cor2010=Deciles_por_fuente_2010_indigena$ING.COR,
+                                   ing_cor2018=Deciles_por_fuente_2018_indigena$ING.COR,
+                                   Tasa_total_indigena)
+
+Trans_hogares_indigena<-Trans_hogares_indigena%>%
+  mutate(transdehogares_aporte=((transdehogares2018-transdehogares2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_indigena)
+
+### Trans de Instituciones
+
+Instituciones_indigena<-data.frame(instituciones2010=Deciles_por_fuente_2010_indigena$TRANS.INST,
+                                   instituciones2018=Deciles_por_fuente_2018_indigena$TRANS.INST,
+                                   ing_cor2010=Deciles_por_fuente_2010_indigena$ING.COR,
+                                   ing_cor2018=Deciles_por_fuente_2018_indigena$ING.COR,
+                                   Tasa_total_indigena)
+
+Instituciones_indigena<-Instituciones_indigena%>%
+  mutate(instituciones_aporte=((instituciones2018-instituciones2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_indigena)
+
+### Alquiler
+
+Alquiler_indigena<-data.frame(alquiler2010=Deciles_por_fuente_2010_indigena$ESTIM.ALQU,
+                              alquiler2018=Deciles_por_fuente_2018_indigena$ESTIM.ALQU,
+                              ing_cor2010=Deciles_por_fuente_2010_indigena$ING.COR,
+                              ing_cor2018=Deciles_por_fuente_2018_indigena$ING.COR,
+                              Tasa_total_indigena)
+
+Alquiler_indigena<-Alquiler_indigena%>%
+  mutate(alquiler_aporte=((alquiler2018-alquiler2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_indigena)
+
+### otros
+
+Otros_indigena<-data.frame(otros2010=Deciles_por_fuente_2010_indigena$OTROS.INGR,
+                           otros2018=Deciles_por_fuente_2018_indigena$OTROS.INGR,
+                           ing_cor2010=Deciles_por_fuente_2010_indigena$ING.COR,
+                           ing_cor2018=Deciles_por_fuente_2018_indigena$ING.COR,
+                           Tasa_total_indigena)
+
+Otros_indigena<-Otros_indigena%>%
+  mutate(otros_aporte=((otros2018-otros2010)/((ing_cor2018-ing_cor2010)))*Tasa_total_indigena)
+
+Cuadro_indigena<-data.frame(Trabajo_indigena$trabajo_aporte,
+                            Renta_indigena$rentas_aporte,
+                            Jubilaciones_indigena$jubilaciones_aporte,
+                            Becas_indigena$becas_aporte,
+                            Donativos_indigena$donativos_aporte,
+                            Remesas_indigena$remesas_aporte,
+                            Benegob_indigena$benegob_aporte,
+                            Trans_hogares_indigena$transdehogares_aporte,
+                            Instituciones_indigena$instituciones_aporte,
+                            Alquiler_indigena$alquiler_aporte,
+                            Otros_indigena$otros_aporte)
+
+Prueba<-(Trabajo_indigena$trabajo_aporte+
+           Renta_indigena$rentas_aporte+
+           Jubilaciones_indigena$jubilaciones_aporte+
+           Becas_indigena$becas_aporte+
+           Donativos_indigena$donativos_aporte+
+           Remesas_indigena$remesas_aporte+
+           Benegob_indigena$benegob_aporte+
+           Trans_hogares_indigena$transdehogares_aporte+
+           Instituciones_indigena$instituciones_aporte+
+           Alquiler_indigena$alquiler_aporte+
+           Otros_indigena$otros_aporte)
+
+all.equal(Prueba,Tasa_total_indigena)
+
+
+names(Cuadro_indigena)<-c("Labor","Capital","Pensions","Scholarships","Donations","Remittances","Government transfers",
+                          "Household transfers","Instituion transfers","Rent estimate","Others")                             
+
+#No indigena                         
+
+Deciles_por_fuente_2010_NO<-read.dbf("Nacional URBANO NO por fuente por DECIL estimaciones 2010.dbf")
+names(Deciles_por_fuente_2010_NO)=c("ING.COR","TRABAJO","SUBORDINADO", "NEGOCIOS","OTROS.TRAB","RENTAS","UTILIDAD","ARRENDA",
+                                    "TRANSFER","JUBILACION","BECAS","DONATIVOS","REMESAS","BENEGOBIER","TRANS.HOG","TRANS.INST","ESTIM.ALQU","OTROS.INGR")
+
+Deciles_por_fuente_2010_NO<-Deciles_por_fuente_2010_NO%>%
+  mutate(prueba=TRABAJO+RENTAS+JUBILACION+BECAS+DONATIVOS+REMESAS+BENEGOBIER+TRANS.HOG+TRANS.INST+ESTIM.ALQU+OTROS.INGR)
+
+all.equal(Deciles_por_fuente_2010_NO$ING.COR,Deciles_por_fuente_2010_NO$prueba)
+
+###
+
+
+Deciles_por_fuente_2018_NO<-read.dbf("Nacional URBANO NO Ingresos por fuente por DECIL estimaciones 2018.dbf")
+
+names(Deciles_por_fuente_2018_NO)=c("ING.COR","TRABAJO","SUBORDINADO", "NEGOCIOS","OTROS.TRAB","RENTAS","UTILIDAD","ARRENDA",
+                                    "TRANSFER","JUBILACION","BECAS","DONATIVOS","REMESAS","BENEGOBIER","TRANS.HOG","TRANS.INST","ESTIM.ALQU","OTROS.INGR")
+
+Deciles_por_fuente_2018_NO<-Deciles_por_fuente_2018_NO%>%
+  mutate(prueba=TRABAJO+RENTAS+JUBILACION+BECAS+DONATIVOS+REMESAS+BENEGOBIER+TRANS.HOG+TRANS.INST+ESTIM.ALQU+OTROS.INGR)
+
+all.equal(Deciles_por_fuente_2018_NO$ING.COR,Deciles_por_fuente_2018_NO$prueba)
+
+Tasa_total_NO<-((Deciles_por_fuente_2018_NO$ING.COR-Deciles_por_fuente_2010_NO$ING.COR)/Deciles_por_fuente_2010_NO$ING.COR)*100
+
+
+# Trabajo
+
+Trabajo_NO<-data.frame(trabajo2010=Deciles_por_fuente_2010_NO$TRABAJO,
+                       trabajo2018=Deciles_por_fuente_2018_NO$TRABAJO,
+                       ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                       ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                       Tasa_total_NO)
+
+Trabajo_NO<-Trabajo_NO%>%
+  mutate(Trabajo_aporte=((trabajo2018-trabajo2010)/((ingcor2018-ingcor2010)))*Tasa_total_NO)
+
+
+# Rentas
+
+Rentas_NO<-data.frame(rentas2010=Deciles_por_fuente_2010_NO$RENTAS,
+                      rentas2018=Deciles_por_fuente_2018_NO$RENTAS,
+                      ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                      ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                      Tasa_total_NO)
+
+Rentas_NO<-Rentas_NO%>%
+  mutate(rentas_aporte=((rentas2018-rentas2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+#Jubilacion
+
+Jubilacion_NO<-data.frame(jubilacion2010=Deciles_por_fuente_2010_NO$JUBILACION,
+                          jubilacion2018=Deciles_por_fuente_2018_NO$JUBILACION,
+                          ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                          ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                          Tasa_total_NO)
+
+Jubilacion_NO<-Jubilacion_NO%>%
+  mutate(jubilacion_aporte=((jubilacion2018-jubilacion2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+#Becas
+
+Becas_NO<-data.frame(becas2010=Deciles_por_fuente_2010_NO$BECAS,
+                     becas2018=Deciles_por_fuente_2018_NO$BECAS,
+                     ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                     ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                     Tasa_total_NO)
+
+Becas_NO<-Becas_NO%>%
+  mutate(becas_aporte=((becas2018-becas2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+#Remesas
+
+Remesas_NO<-data.frame(remesas2010=Deciles_por_fuente_2010_NO$REMESAS,
+                       remesas2018=Deciles_por_fuente_2018_NO$REMESAS,
+                       ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                       ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                       Tasa_total_NO)
+
+Remesas_NO<-Remesas_NO%>%
+  mutate(becas_aporte=((remesas2018-remesas2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+#Donativos
+
+Donativos_NO<-data.frame(donativos2010=Deciles_por_fuente_2010_NO$DONATIVOS,
+                         donativos2018=Deciles_por_fuente_2018_NO$DONATIVOS,
+                         ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                         ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                         Tasa_total_NO)
+
+Donativos_NO<-Donativos_NO%>%
+  mutate(donativos_aporte=((donativos2018-donativos2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+#BENEGOBIER
+
+Benegob_NO<-data.frame(bene2010=Deciles_por_fuente_2010_NO$BENEGOBIER,
+                       bene2018=Deciles_por_fuente_2018_NO$BENEGOBIER,
+                       ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                       ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                       Tasa_total_NO)
+
+Benegob_NO<-Benegob_NO%>%
+  mutate(bene_aporte=((bene2018-bene2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+#TRANS.HOG
+
+trans_hog_NO<-data.frame(transhog2010=Deciles_por_fuente_2010_NO$TRANS.HOG,
+                         transhog2018=Deciles_por_fuente_2018_NO$TRANS.HOG,
+                         ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                         ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                         Tasa_total_NO)
+
+trans_hog_NO<-trans_hog_NO%>%
+  mutate(trans_hog_aporte=((transhog2018-transhog2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+
+#TRANS.INST
+
+trans_inst_NO<-data.frame(trans_inst2010=Deciles_por_fuente_2010_NO$TRANS.INST,
+                          trans_inst2018=Deciles_por_fuente_2018_NO$TRANS.INST,
+                          ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                          ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                          Tasa_total_NO)
+
+trans_inst_NO<-trans_inst_NO%>%
+  mutate(trans_inst_aporte=((trans_inst2018-trans_inst2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+
+#ESTIM.ALQU
+
+Estim_alqu_NO<-data.frame(estim2010=Deciles_por_fuente_2010_NO$ESTIM.ALQU,
+                          estim2018=Deciles_por_fuente_2018_NO$ESTIM.ALQU,
+                          ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                          ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                          Tasa_total_NO)
+
+Estim_alqu_NO<-Estim_alqu_NO%>%
+  mutate(estim_aporte=((estim2018-estim2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+
+#OTROS.INGR   
+
+Otros_NO<-data.frame(otros2010=Deciles_por_fuente_2010_NO$OTROS.INGR,
+                     otros2018=Deciles_por_fuente_2018_NO$OTROS.INGR,
+                     ingcor2010=Deciles_por_fuente_2010_NO$ING.COR,
+                     ingcor2018=Deciles_por_fuente_2018_NO$ING.COR,
+                     Tasa_total_NO)
+
+Otros_NO<-Otros_NO%>%
+  mutate(otors_aporte=((otros2018-otros2010)/(ingcor2018-ingcor2010))*Tasa_total_NO)
+
+Cuadro_NO<-data.frame(Trabajo_NO$Trabajo_aporte,
+                      Rentas_NO$rentas_aporte,
+                      Jubilacion_NO$jubilacion_aporte,
+                      Becas_NO$becas_aporte,
+                      Remesas_NO$becas_aporte,
+                      Donativos_NO$donativos_aporte,
+                      Benegob_NO$bene_aporte,
+                      trans_hog_NO$trans_hog_aporte,
+                      trans_inst_NO$trans_inst_aporte,
+                      Estim_alqu_NO$estim_aporte,
+                      Otros_NO$otors_aporte)  
+
+prueba_NO<-(Trabajo_NO$Trabajo_aporte+
+              Rentas_NO$rentas_aporte+
+              Jubilacion_NO$jubilacion_aporte+
+              Becas_NO$becas_aporte+
+              Remesas_NO$becas_aporte+
+              Donativos_NO$donativos_aporte+
+              Benegob_NO$bene_aporte+
+              trans_hog_NO$trans_hog_aporte+
+              trans_inst_NO$trans_inst_aporte+
+              Estim_alqu_NO$estim_aporte+
+              Otros_NO$otors_aporte)
+
+all.equal(prueba_NO,Tasa_total_NO)
+
+
+names(Cuadro_NO)<-c("Labor","Capital","Pensions","Scholarships","Donations","Remittances","Government transfers",
+                    "Household transfers","Instituion transfers","Rent estimate","Others")      
+
+######### Construcción del cuadro final para el gráfico
+
+Cuadro_indigena<-Cuadro_indigena %>%
+  mutate("Ethnic group"="Indigenous", Deciles=c("Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+indigena_melt<-melt(Cuadro_indigena)
+
+indigena_melt<-indigena_melt%>%
+  mutate(Deciles=fct_relevel(Deciles,"Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+Cuadro_NO<-Cuadro_NO %>%
+  mutate("Ethnic group"="Non-Indigenous", Deciles=c("Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+
+NO_melt<-melt(Cuadro_NO)
+
+NO_melt<-NO_melt%>%
+  mutate(Deciles=fct_relevel(Deciles,"Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+Cuadro_final<-rbind(indigena_melt,NO_melt)
+
+Cuadro_final<-Cuadro_final%>%
+  mutate(Deciles=fct_relevel(Deciles,"Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"))
+
+####### Etiquetas para el gráfico
+
+labels_indigena<-Cuadro_final%>%
+  filter(`Ethnic group`=="Indigenous")%>%
+  mutate(labels=ifelse(value>0,value,0))%>%
+  group_by(Deciles)%>%
+  summarize(sum(labels)+1.5)
+
+labels_indigena<-labels_indigena$`sum(labels) + 1.5`
+
+
+labels_NO<-Cuadro_final%>%
+  filter(`Ethnic group`=="Non-Indigenous")%>%
+  mutate(labels=ifelse(value>0,value,0))%>%
+  group_by(Deciles)%>%
+  summarize(sum(labels)+1.5)
+
+labels_NO<-labels_NO$`sum(labels) + 1.5`
+
+
+
+
+###### Gráfico
+
+
+GIC<-ggplot()+
+  geom_col(data = indigena_melt, mapping=aes(x=as.numeric(Deciles)-0.15, y=value, fill= as.factor(variable), group=`Ethnic group`),
+           width = 0.25)+
+  geom_col(data = NO_melt, mapping=aes(x=as.numeric(Deciles)+0.15, y=value, fill= as.factor(variable), group=`Ethnic group`),
+           width = 0.25)+
+  labs(title = "Mexico
+Urban localities
+Growth Incidence Curve by ethnic group and source of income
+2010-2018",
+       y="Growth rate (total)",
+       x="Decile",
+       fill="Source of income",
+       caption="Left columns at each decile represent indigenous people and right columns represent non-indigenous people")+
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())+
+  scale_y_continuous(breaks = seq(-20,20,40),labels = c("",""))+
+  scale_x_continuous(breaks = seq(1,11,1),labels = c("Mean","I","II","III","IV","V","VI","VII","VIII","IX","X") )+
+  geom_hline(yintercept = 0)+
+  annotate("text", label = round(Tasa_total_indigena[1],digits = 2),
+           x = 0.85, y = labels_indigena[1], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[1],digits = 2),
+           x = 1.15, y = labels_NO[1], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_indigena[2],digits = 2),
+           x = 1.85, y = labels_indigena[2], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[2],digits = 2),
+           x = 2.15, y = labels_NO[2], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_indigena[3],digits = 2),
+           x = 2.85, y = labels_indigena[3], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[3],digits = 2),
+           x = 3.15, y = labels_NO[3], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_indigena[4],digits = 2),
+           x = 3.85, y = labels_indigena[4], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[4],digits = 2),
+           x = 4.15, y = labels_NO[4], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_indigena[5],digits = 2),
+           x = 4.85, y = labels_indigena[5], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[5],digits = 2),
+           x = 5.15, y = labels_NO[5], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_indigena[6],digits = 2),
+           x = 5.85, y = labels_indigena[6], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[6],digits = 2),
+           x = 6.15, y = labels_NO[6], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_indigena[7],digits = 2),
+           x = 6.85, y = labels_indigena[7], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[7],digits = 2),
+           x = 7.15, y = labels_NO[7], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_indigena[8],digits = 2),
+           x = 7.85, y = labels_indigena[8], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[8],digits = 2),
+           x = 8.15, y = labels_NO[8], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_indigena[9],digits = 2),
+           x = 8.85, y = labels_indigena[9], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[9],digits = 2),
+           x = 9.15, y = labels_NO[9], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_indigena[10],digits = 2),
+           x = 9.85, y = labels_indigena[10], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[10],digits = 2),
+           x = 10.15, y = labels_NO[10], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_indigena[11],digits = 2),
+           x = 10.85, y = labels_indigena[11], size = 3, colour = "black",angle=45)+
+  annotate("text", label = round(Tasa_total_NO[11],digits = 2),
+           x = 11.15, y = labels_NO[11], size = 3, colour = "black",angle=45)+
+  theme_minimal()
+
+GIC
+
+GIC<-ggplotly(GIC)
+
+GIC
+
+saveWidget(GIC,fil="GIC_Mexico_urban_by_ethnic_group_and_source_of_income.html")
 
 rm(list=ls())
 
