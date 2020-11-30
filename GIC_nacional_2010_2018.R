@@ -12001,3 +12001,75 @@ by source of income and size of the settlement", color = "black", face = "bold",
 
 
 
+
+###### Shared prosperity total #######
+library(foreign)
+library(tidyverse)
+library(plotly)
+library(htmlwidgets)
+library(reshape2)
+
+setwd("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/GIC Nacional 2010 - 2018/GIC_nacional_2010_2018")
+
+Deciles2010<-read.dbf("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/GIC Nacional 2010 - 2018/GIC_nacional_2010_2018/Nacional por fuente por DECIL estimaciones 2010.dbf")
+names(Deciles2010)[1]<-c("ingcor2010")
+
+Deciles2018<-read.dbf("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/GIC Nacional 2010 - 2018/GIC_nacional_2010_2018/Nacional Ingresos por fuente por DECIL estimaciones 2018.dbf")
+names(Deciles2018)[1]<-c("ingcor2018")
+
+GICTotal<-data.frame(Deciles2010,Deciles2018)
+
+
+GICTotal<-GICTotal%>%
+  mutate(Rate=((ingcor2018-ingcor2010)/ingcor2010)*100,Deciles=c("Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"),
+         orden=1:11)
+
+growth_total<-round(GICTotal$Rate[1],2)
+
+bottom_40<-round(mean(GICTotal$Rate[2:5]),2)
+
+rm(list = ls())
+
+###### shared prosperity non-idigenous #######
+setwd(c("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/GIC Nacional 2010 - 2018/GIC_nacional_2010_2018"))
+
+deciles2010No<-read.dbf("Nacional NO por fuente por DECIL estimaciones 2010.dbf")
+names(deciles2010No)[1]<-c("No2010")
+
+deciles2018No<-read.dbf("Nacional NO Ingresos por fuente por DECIL estimaciones 2018.dbf")
+names(deciles2018No)[1]<-c("No2018")
+
+GICTotal<-data.frame(deciles2010No,deciles2018No)
+
+
+GICTotal<-GICTotal%>%
+  mutate(Rate=((No2018-No2010)/No2010)*100,Deciles=c("Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"),
+         orden=1:11)
+
+growth_total<-round(GICTotal$Rate[1],2)
+
+bottom_40<-round(mean(GICTotal$Rate[2:5]),2)
+
+rm(list = ls())
+
+###### shared prosperity idigenous #######
+setwd(c("C:/Users/Erick/Dropbox/GIC/GITHUB2018/GIC/GIC Nacional 2010 - 2018/GIC_nacional_2010_2018"))
+
+deciles2010indigena<-read.dbf("Nacional INDIGENA por fuente por DECIL estimaciones 2010.dbf")
+names(deciles2010indigena)[1]<-c("Indigena2010")
+
+deciles2018indigena<-read.dbf("Nacional INDIGENA Ingresos por fuente por DECIL estimaciones 2018.dbf")
+names(deciles2018indigena)[1]<-c("Indigena2018")
+
+GICTotal<-data.frame(deciles2010indigena,deciles2018indigena)
+
+
+GICTotal<-GICTotal%>%
+  mutate(Rate=((Indigena2018-Indigena2010)/Indigena2010)*100,Deciles=c("Mean","I","II","III","IV","V","VI","VII","VIII","IX","X"),
+         orden=1:11)
+
+growth_total<-round(GICTotal$Rate[1],2)
+
+bottom_40<-round(mean(GICTotal$Rate[2:5]),2)
+
+rm(list = ls())
