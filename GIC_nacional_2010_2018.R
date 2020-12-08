@@ -4015,14 +4015,15 @@ Conc2010<-Conc2010%>%
 
 design_2010<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2010)
 
-pobreza_rural_extrema_2010<-svymean(~pobreza_rural_extrema, design=design_2010)
+pobreza_rural_extrema_2010<-round(svymean(~pobreza_rural_extrema, design=design_2010)*100,2)
 
 pobreza_rural_extrema_2010
 
-pobreza_rural_moderada_2010<-svymean(~pobreza_rural_moderada, design=design_2010)
+pobreza_rural_moderada_2010<-round(svymean(~pobreza_rural_moderada, design=design_2010)*100,2)
 
 pobreza_rural_moderada_2010
 
+rm(list=ls())
 
 
 #### Urbanos
@@ -4050,15 +4051,15 @@ Conc2010<-Conc2010%>%
 
 design_2010<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2010)
 
-pobreza_urbana_extrema_2010<-svymean(~pobreza_urbana_extrema, design=design_2010)
+pobreza_urbana_extrema_2010<-round(svymean(~pobreza_urbana_extrema, design=design_2010)*100,2)
 
 pobreza_urbana_extrema_2010
 
-pobreza_urbana_moderada_2010<-svymean(~pobreza_urbana_moderada, design=design_2010)
+pobreza_urbana_moderada_2010<-round(svymean(~pobreza_urbana_moderada, design=design_2010)*100,2)
 
 pobreza_urbana_moderada_2010
 
-
+rm(list = ls())
 
 ##### Rurales 2018
 
@@ -4095,14 +4096,15 @@ Conc2018<-Conc2018%>%
 
 design_2018<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2018)
 
-pobreza_rural_extrema_2018<-svymean(~pobreza_rural_extrema, design=design_2018)
+pobreza_rural_extrema_2018<-round(svymean(~pobreza_rural_extrema, design=design_2018)*100,2)
 
 pobreza_rural_extrema_2018
 
-pobreza_rural_moderada_2018<-svymean(~pobreza_rural_moderada, design=design_2018)
+pobreza_rural_moderada_2018<-round(svymean(~pobreza_rural_moderada, design=design_2018)*100,2)
 
 pobreza_rural_moderada_2018
 
+rm(list = ls())
 
 #### urbanos 2018
 
@@ -4130,13 +4132,15 @@ Conc2018<-Conc2018%>%
 
 design_2018<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2018)
 
-pobreza_urbana_extrema_2018<-svymean(~pobreza_urbana_extrema, design=design_2018)
+pobreza_urbana_extrema_2018<-round(svymean(~pobreza_urbana_extrema, design=design_2018)*100,2)
 
 pobreza_urbana_extrema_2018
 
-pobreza_urbana_moderada_2018<-svymean(~pobreza_urbana_moderada, design=design_2018)
+pobreza_urbana_moderada_2018<-round(svymean(~pobreza_urbana_moderada, design=design_2018)*100,2)
 
 pobreza_urbana_moderada_2018
+
+rm(list=ls())
 
 ########## Lineas de pobreza por raza ##########
 library(foreign)
@@ -4173,14 +4177,15 @@ Conc2010<-Conc2010%>%
 
 design_2010<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2010)
 
-pobreza_rural_extrema_2010<-svyby(~pobreza_rural_extrema,by=Conc2010$HogarIndig, design=design_2010,svymean)
+pobreza_rural_extrema_2010<-round(svyby(~pobreza_rural_extrema,by=Conc2010$HogarIndig, design=design_2010,svymean)*100,2)
 
 pobreza_rural_extrema_2010
 
-pobreza_rural_moderada_2010<-svyby(~pobreza_rural_moderada,by=Conc2010$HogarIndig, design=design_2010,svymean)
+pobreza_rural_moderada_2010<-round(svyby(~pobreza_rural_moderada,by=Conc2010$HogarIndig, design=design_2010,svymean)*100,2)
 
 pobreza_rural_moderada_2010
 
+ rm(list = ls())
 
 
 
@@ -4209,14 +4214,15 @@ Conc2010<-Conc2010%>%
 
 design_2010<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2010)
 
-pobreza_urbana_extrema_2010<-svyby(~pobreza_urbana_extrema, by=Conc2010$HogarIndig,design=design_2010,svymean)
+pobreza_urbana_extrema_2010<-round(svyby(~pobreza_urbana_extrema, by=Conc2010$HogarIndig,design=design_2010,svymean)*100,2)
 
 pobreza_urbana_extrema_2010
 
-pobreza_urbana_moderada_2010<-svyby(~pobreza_urbana_moderada, by=Conc2010$HogarIndig, design=design_2010,svymean)
+pobreza_urbana_moderada_2010<-round(svyby(~pobreza_urbana_moderada, by=Conc2010$HogarIndig, design=design_2010,svymean)*100,2)
 
 pobreza_urbana_moderada_2010
 
+rm(list=ls())
 
 
 ##### Rurales 2018
@@ -4254,13 +4260,15 @@ Conc2018<-Conc2018%>%
 
 design_2018<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2018)
 
-pobreza_rural_extrema_2018<-svyby(~pobreza_rural_extrema,by=Conc2010$HogarIndig, design=design_2018,svymean)
+pobreza_rural_extrema_2018<-round(svyby(~pobreza_rural_extrema,by=Conc2018$HogarIndig, design=design_2018,svymean)*100,2)
 
 pobreza_rural_extrema_2018
 
-pobreza_rural_moderada_2018<-svyby(~pobreza_rural_moderada,by=Conc2010$HogarIndig, design=design_2018,svymean)
+pobreza_rural_moderada_2018<-round(svyby(~pobreza_rural_moderada,by=Conc2018$HogarIndig, design=design_2018,svymean)*100,2)
 
 pobreza_rural_moderada_2018
+
+rm(list = ls())
 
 
 #### urbanos 2018
@@ -4289,15 +4297,15 @@ Conc2018<-Conc2018%>%
 
 design_2018<-svydesign(id=~upm,strata = ~est_dis, weights = ~factor,data = Conc2018)
 
-pobreza_urbana_extrema_2018<-svyby(~pobreza_urbana_extrema, by=Conc2010$HogarIndig,design=design_2018, svymean)
+pobreza_urbana_extrema_2018<-round(svyby(~pobreza_urbana_extrema, by=Conc2018$HogarIndig,design=design_2018, svymean)*100,2)
 
 pobreza_urbana_extrema_2018
 
-pobreza_urbana_moderada_2018<-svyby(~pobreza_urbana_moderada,by=Conc2010$HogarIndig, design=design_2018,svymean)
+pobreza_urbana_moderada_2018<-round(svyby(~pobreza_urbana_moderada,by=Conc2018$HogarIndig, design=design_2018,svymean)*100,2)
 
 pobreza_urbana_moderada_2018
 
-++++++++++++++
+rm(list=ls())
 
 ########## Ingresos por fuente por Decil URBANO 2010 ##########
 library(foreign)
